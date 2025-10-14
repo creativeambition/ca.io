@@ -60,7 +60,7 @@ function About() {
           detailsCard={true}
           className="details-card top-[40%] right-0 md:top-auto"
         >
-          <span className="text-[#61cc9c] font-semibold text-lg md:text-2xl">
+          <span className="text-[#61cc9c] font-semibold text-lg md:text-xl">
             # Dev-101
           </span>
 
@@ -72,3 +72,4 @@ function About() {
 }
 
 export default About;
+
