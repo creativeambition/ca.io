@@ -42,19 +42,16 @@ const StoryAndDetailsCard = () => {
 
   return (
     <div className={`flex flex-1 flex-col mt-1 md:mt-4 gap-2 w-full z-50`}>
-      <h2 className="font-semibold">
+      <h3 className="font-semibold">
         {showStory ? (
           <>
-            How it all started{" "}
-            <i className="text-[#61cc9c]">
-              {"{"} story time! {"}"}
-            </i>
+            How it all started...
           </>
         ) : (
           "Profile"
         )}
         <hr className="mt-2 md:mt-3" />
-      </h2>
+      </h3>
 
       {showStory ? (
         <p className="text-md md:text-base tracking-wide">
@@ -88,22 +85,13 @@ const StoryAndDetailsCard = () => {
           </h2>
           <h2>
             address ~{" "}
-            <i className="font-medium text-[#61cc9c]">Accra-Satellite</i>
+            <i className="font-medium text-[#61cc9c]">localhost:5173</i>
           </h2>
           <h2>
             phone ~{" "}
-            <i className="font-medium text-[#61cc9c]">[+233] 20 425 5719</i>
+            <i className="font-medium text-[#61cc9c]">192.168.72.0</i>
           </h2>
           <hr className="opacity-25" />
-          <h2>
-            nationality ~ <i className="font-medium text-[#61cc9c]">Ghanaian</i>
-          </h2>
-          <h2>
-            age ~{" "}
-            <i className="font-medium text-[#61cc9c]">
-              {yearsSince("2002-11-24")}
-            </i>
-          </h2>
           <h2>
             gender {"{"} default {"}"} ~{" "}
             <i className="font-medium text-[#61cc9c]">Male</i>
@@ -138,3 +126,4 @@ const StoryAndDetailsCard = () => {
 };
 
 export default StoryAndDetailsCard;
+
