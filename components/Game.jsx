@@ -2,7 +2,7 @@
 import { montserrat_alternates } from "@/lib/fonts";
 import clsx from "clsx";
 import { createContext, useContext, useEffect, useState } from "react";
-import { bestMove, computeWinner, winningCombinations } from "@/lib/gameUtils";
+import { bestMove, computeWinner } from "@/lib/gameUtils";
 
 const GameState = createContext(null);
 
@@ -20,89 +20,35 @@ function Game() {
   });
 
   useEffect(() => {
-    let prevSessionData = JSON.parse(localStorage.getItem("GameData"));
-    const data = {
-      playerName: prevSessionData?.playerName,
-      moves: prevSessionData?.moves,
-      moveCount: prevSessionData?.moveCount,
-      playerTurn: prevSessionData?.playerTurn,
-      gameOver: prevSessionData?.gameOver,
-      winner: prevSessionData?.winner,
-      scores: prevSessionData?.scores,
-      winningCombination: prevSessionData?.winningCombination,
-      numberOfGames: prevSessionData?.numberOfGames,
-    };
+    let prevSessionData = null;
+    try {
+      prevSessionData = JSON.parse(localStorage.getItem("GameData"));
+    } catch {
+      prevSessionData = null;
+    }
+
     if (prevSessionData?.playerName) {
-      localStorage.setItem("GameData", JSON.stringify(data));
-      setGameData(prevSessionData);
+      queueMicrotask(() => setGameData(prevSessionData));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("GameData", JSON.stringify(gameData));
-  }, [gameData]);
-
-  // const computeWinner = (player) => {
-  //   if (gameData.gameOver) return;
-
-  //   const winner = winningCombinations.find((combination) =>
-  //     combination.every((index) => gameData.moves[index] === player)
-  //   );
-
-  //   if (winner) {
-  //     setGameData((prev) => ({
-  //       ...prev,
-  //       gameOver: true,
-  //       winningCombination: winner,
-  //       winner: player,
-  //       scores: {
-  //         ...prev.scores,
-  //         [player]: prev.scores[player] + 1,
-  //       },
-  //       numberOfGames: prev.numberOfGames + 1,
-  //     }));
-  //   } else if (gameData.moveCount === 9) {
-  //     setGameData((prev) => ({
-  //       ...prev,
-  //       gameOver: true,
-  //       winner: "TIE!",
-  //       numberOfGames: prev.numberOfGames + 1,
-  //     }));
-  //   }
-  // };
-
-  useEffect(() => {
-    if (gameData.moveCount >= 5 && !gameData.gameOver) {
-      const player = gameData.playerTurn == "X" ? "O" : "X";
-      let winner = computeWinner(player, gameData);
-      console.log(winner);
-      if (winner) {
-        setGameData((prev) => ({
-          ...prev,
-          gameOver: true,
-          winningCombination: winner,
-          winner: player,
-          scores: {
-            ...prev.scores,
-            [player]: prev.scores[player] + 1,
-          },
-          numberOfGames: prev.numberOfGames + 1,
-        }));
-      } else if (winner === false) {
-        setGameData((prev) => ({
-          ...prev,
-          gameOver: true,
-          winner: "TIE!",
-          numberOfGames: prev.numberOfGames + 1,
-        }));
-      }
+    try {
+      localStorage.setItem("GameData", JSON.stringify(gameData));
+    } catch {
+      // ignore storage failures (e.g. private mode)
     }
   }, [gameData]);
 
   function startGame() {
-    let prevSessionData = JSON.parse(localStorage.getItem("GameData"));
+    let prevSessionData = null;
+    try {
+      prevSessionData = JSON.parse(localStorage.getItem("GameData"));
+    } catch {
+      prevSessionData = null;
+    }
 
-    if (prevSessionData.playerName) return;
+    if (prevSessionData?.playerName) return;
 
     let userInput = prompt(
       "Enter your preferred player name, or cancel to use default -> Guest"
@@ -179,35 +125,57 @@ function Board() {
   };
 
   useEffect(() => {
-    if (gameData.playerTurn === "O" && !gameData.gameOver) {
-      setTimeout(() => {
-        const aiMove = bestMove(gameData.moves);
+    if (gameData.playerTurn !== "O" || gameData.gameOver) return;
 
-        setGameData((prev) => {
-          const moves = [...prev.moves];
-          moves[aiMove] = "O";
+    const timeoutId = setTimeout(() => {
+      setGameData((prev) => {
+        if (prev.playerTurn !== "O" || prev.gameOver) return prev;
+
+        const aiMove = bestMove(prev.moves);
+        const moves = [...prev.moves];
+        moves[aiMove] = "O";
+
+        const candidate = {
+          ...prev,
+          moves,
+          moveCount: prev.moveCount + 1,
+          playerTurn: "X",
+        };
+
+        const winner = computeWinner("O", candidate);
+
+        if (winner) {
           return {
-            ...prev,
-            moves: moves,
-            moveCount: prev.moveCount + 1,
+            ...candidate,
+            gameOver: true,
+            winningCombination: winner,
+            winner: "O",
+            scores: { ...prev.scores, O: prev.scores.O + 1 },
+            numberOfGames: prev.numberOfGames + 1,
           };
-        });
-
-        if (!gameData.gameOver) {
-          setGameData((prev) => ({
-            ...prev,
-            playerTurn: "X",
-          }));
         }
-      }, 2500);
-    }
+
+        if (winner === false) {
+          return {
+            ...candidate,
+            gameOver: true,
+            winner: "TIE!",
+            numberOfGames: prev.numberOfGames + 1,
+          };
+        }
+
+        return candidate;
+      });
+    }, 2500);
+
+    return () => clearTimeout(timeoutId);
   }, [
-    gameData.moveCount,
-    gameData.playerTurn,
     bestMove,
+    gameData.playerTurn,
     gameData.gameOver,
-    setGameData,
+    gameData.moveCount,
     gameData.moves,
+    setGameData,
   ]);
 
   const gameOverClass =
@@ -300,52 +268,49 @@ function Board() {
 function Square({ id }) {
   const { gameData, setGameData } = useContext(GameState);
 
-  const [winningCombinationClassName, setWinningCombinationClassName] =
-    useState("");
-
   function handleMove() {
     if (gameData.moves[id] || gameData.gameOver) return;
 
     setGameData((prev) => {
       const moves = [...prev.moves];
       moves[id] = "X";
-      return {
+
+      const candidate = {
         ...prev,
-        moves: moves,
+        moves,
         moveCount: prev.moveCount + 1,
       };
-    });
 
-    if (!gameData.gameOver) {
-      setGameData((prev) => ({
-        ...prev,
-        playerTurn: "O",
-      }));
-    }
+      const winner = computeWinner("X", candidate);
+
+      if (winner) {
+        return {
+          ...candidate,
+          gameOver: true,
+          winningCombination: winner,
+          winner: "X",
+          scores: { ...prev.scores, X: prev.scores.X + 1 },
+          numberOfGames: prev.numberOfGames + 1,
+        };
+      }
+
+      if (winner === false) {
+        return {
+          ...candidate,
+          gameOver: true,
+          winner: "TIE!",
+          numberOfGames: prev.numberOfGames + 1,
+        };
+      }
+
+      return { ...candidate, playerTurn: "O" };
+    });
   }
 
-  useEffect(() => {
-    if (gameData.winningCombination && id !== undefined) {
-      let isWinningCell = false;
-
-      for (let index = 0; index < gameData.winningCombination.length; index++) {
-        if (id === gameData.winningCombination[index]) {
-          isWinningCell = true;
-          break;
-        }
-      }
-
-      if (isWinningCell) {
-        setWinningCombinationClassName(
-          "bg-[#61cc9c] text-black font-bold border-2 border-black"
-        );
-      } else {
-        setWinningCombinationClassName("");
-      }
-    } else {
-      setWinningCombinationClassName("");
-    }
-  }, [gameData.winningCombination, id]);
+  const winningCombinationClassName =
+    gameData.winningCombination?.includes(id)
+      ? "bg-[#61cc9c] text-black font-bold border-2 border-black"
+      : "";
 
   return (
     <div

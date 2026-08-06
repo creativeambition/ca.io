@@ -73,20 +73,8 @@ export const FrontEndSkills = [
     img: "/assets/StackLogos/react.png",
   },
   {
-    name: "Sass",
-    img: "/assets/StackLogos/sass.png",
-  },
-  {
-    name: "Figma",
-    img: "/assets/StackLogos/figma.png",
-  },
-  {
     name: "Tailwind",
     img: "/assets/StackLogos/tailwind.png",
-  },
-  {
-    name: "Solid",
-    img: "/assets/StackLogos/solidjs.png",
   },
   {
     name: "Astro",
@@ -105,10 +93,6 @@ export const BackEndSkills = [
   {
     name: "Next",
     img: "/assets/StackLogos/next.png",
-  },
-  {
-    name: "Firebase",
-    img: "/assets/StackLogos/firebase.png",
   },
   {
     name: "Strapi",
@@ -150,14 +134,6 @@ export const otherSkills = [
     name: "Google Cloud",
     img: "/assets/StackLogos/gcp.png",
   },
-  {
-    name: "Spline 3D",
-    img: "/assets/StackLogos/spline.png",
-  },
-  {
-    name: "Photoshop",
-    img: "/assets/StackLogos/photoshop.png",
-  },
 ];
 
 export const projects = [
@@ -169,7 +145,7 @@ export const projects = [
       "/assets/StackLogos/next.png",
       "/assets/StackLogos/supabase.png",
     ],
-    thumbnail: "/assets/ProjectThumbnails/LUC.png",
+    thumbnail: "/assets/ProjectThumbnails/LUC.webp",
     description: "E-Commerce App",
   },
   {
@@ -179,7 +155,7 @@ export const projects = [
       "/assets/StackLogos/sass.png",
       "/assets/StackLogos/firebase.png",
     ],
-    thumbnail: "/assets/ProjectThumbnails/movilla.png",
+    thumbnail: "/assets/ProjectThumbnails/movilla.webp",
     description: "Movie/TV streaming web-app featuring TMDB",
   },
   {
@@ -189,13 +165,13 @@ export const projects = [
       "/assets/StackLogos/sass.png",
       "/assets/StackLogos/js.png",
     ],
-    thumbnail: "/assets/ProjectThumbnails/revo.png",
+    thumbnail: "/assets/ProjectThumbnails/revo.webp",
     description: "FinTech SaaS Landing Page",
   },
   {
     title: "Omini",
     techs: ["/assets/StackLogos/react.png", "/assets/StackLogos/sass.png"],
-    thumbnail: "/assets/ProjectThumbnails/omini.png",
+    thumbnail: "/assets/ProjectThumbnails/omini.webp",
     description: "GPT-4o LLM - Landing Page",
   },
   {
@@ -206,7 +182,7 @@ export const projects = [
       "/assets/StackLogos/sass.png",
       "/assets/StackLogos/firebase.png",
     ],
-    thumbnail: "/assets/ProjectThumbnails/z-chat.png",
+    thumbnail: "/assets/ProjectThumbnails/z-chat.webp",
     description: "chat app",
   },
   {
@@ -217,7 +193,7 @@ export const projects = [
       "/assets/StackLogos/supabase.png",
       "/assets/StackLogos/firebase.png",
     ],
-    thumbnail: "/assets/ProjectThumbnails/e-book.png",
+    thumbnail: "/assets/ProjectThumbnails/e-book.webp",
     description: "E-book web-app",
   },
 ];

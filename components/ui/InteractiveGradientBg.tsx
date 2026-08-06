@@ -13,7 +13,6 @@ export const InteractiveGradientBg = ({
   pointerColor = "140, 100, 255",
   size = "80%",
   blendingValue = "hard-light",
-  className,
   interactive = true,
   containerClassName,
 }: {
@@ -54,7 +53,18 @@ export const InteractiveGradientBg = ({
     document.body.style.setProperty("--pointer-color", pointerColor);
     document.body.style.setProperty("--size", size);
     document.body.style.setProperty("--blending-value", blendingValue);
-  }, []);
+  }, [
+    blendingValue,
+    fifthColor,
+    firstColor,
+    fourthColor,
+    gradientBackgroundEnd,
+    gradientBackgroundStart,
+    pointerColor,
+    secondColor,
+    size,
+    thirdColor,
+  ]);
 
   useEffect(() => {
     function move() {
@@ -81,7 +91,9 @@ export const InteractiveGradientBg = ({
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
-    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
+    queueMicrotask(() =>
+      setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent))
+    );
   }, []);
 
   return (

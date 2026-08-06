@@ -1,24 +1,20 @@
-import { montserrat_alternates, poppins } from "@/lib/fonts";
+import { montserrat_alternates } from "@/lib/fonts";
 import CardCorners from "./CardCorners";
 import { InteractiveGradientBg } from "@/components/ui/InteractiveGradientBg";
 import { FancyButtonAlt } from "./FancyButton";
-import { FaRegCopy } from "react-icons/fa6";
 import { socials } from "@/lib/utils";
 import { PiFilePdfFill } from "react-icons/pi";
 import { RiChatSmile3Line } from "react-icons/ri";
 import Link from "next/link";
 import { memo, useMemo } from "react";
-import {
-  DynamicGame,
-  DynamicInteractiveGradientBg,
-} from "@/lib/dynamic-imports";
+import { DynamicGame } from "@/lib/dynamic-imports";
+import DigitalScoreboard from "./DigitalScoreboard";
 
 const techStack = {
-  primary: ["Solid", "React", "Next", "Node", "Express", "MongoDB"],
+  primary: ["React", "Next", "Node", "Express", "MongoDB"],
   secondary: [
     "Postgres",
     "MySQL",
-    "Firebase",
     "AWS",
     "Google Cloud",
     "Blender",
@@ -47,11 +43,13 @@ const BentoGrid = memo(function BentoGrid() {
       <div className="relative flex flex-col items-center p-4 min-h-[250px] border border-white/[25%] bg-black/[20%] backdrop-blur-md col-span-2">
         <CardCorners />
         <h1 className={`${montserrat_alternates.className} font-semibold`}>
-          Address
+          Location
         </h1>
         <div className="flex flex-col items-center m-auto gap-2">
-          <h1 className="text-2xl font-bold">Ghana ~ Accra</h1>
-          <span className="text-gray-400">Satellite</span>
+          <h1 className="text-2xl font-bold">Accra, Ghana</h1>
+          <span className="text-gray-400">
+            Flexible &amp; open to remote work
+          </span>
         </div>
         <div
           className="absolute inset-0 opacity-10"
@@ -92,7 +90,7 @@ const BentoGrid = memo(function BentoGrid() {
 
       <div className="flex flex-col justify-start items-start p-4 relative min-h-[250px] border bg-black/[20%] border-white/[25%] col-span-2 gap-8">
         <CardCorners />
-        <DynamicInteractiveGradientBg />
+        <InteractiveGradientBg />
 
         <h1
           className={`relative ${montserrat_alternates.className} whitespace-nowrap font-semibold`}
@@ -125,65 +123,30 @@ const BentoGrid = memo(function BentoGrid() {
         </div>
       </div>
 
-      <div className="relative flex flex-col items-center justify-center p-4 min-h-[250px] border bg-black/[20%] border-white/[25%] xl:row-span-2 col-span-3">
+      <div className="relative flex flex-col p-4 min-h-[250px] border bg-black/[20%] border-white/[25%] xl:row-span-2 col-span-3">
         <CardCorners />
         <InteractiveGradientBg />
 
-        <div className="mt-auto h-[40px] md:h-[60px] w-full mb-8 flex justify-center">
-          {socials.map(({ name, Icon, link }, index) => {
-            return (
-              <Link
-                key={name}
-                href={link}
-                target="_blank"
-                className={`h-[45px] md:h-[60px] aspect-square rounded-xl bg-black border border-white/30 flex items-center justify-center text-4xl cursor-pointer`}
-                style={{
-                  "--size": socials.length,
-                  "--index": index,
-                  transform: `rotate(calc(360 / var(--size) * var(--index) * 1deg))`,
-                }}
-              >
-                <Icon
-                  className="text-[24px] sm:text-[32px]"
-                  style={{
-                    "--size": socials.length,
-                    "--index": index,
-                    transform: `rotate(calc(360 / var(--size) * var(--index) * -1deg))`,
-                  }}
-                />
-              </Link>
-            );
-          })}
-        </div>
-
         <h1
-          className={`relative ${poppins.className} text-2xl md:text-3xl lg:text-4xl font-semibold text-center`}
+          className={`relative ${montserrat_alternates.className} font-semibold`}
         >
-          @Creative Ambition
+          Scoreboard
         </h1>
 
-        <p className="relative max-w-[90%] md:max-w-[80%] lg:max-w-[70%] text-center mt-4 mb-2">
-          Get in touch via any of the above platforms
-        </p>
+        <DigitalScoreboard />
 
-        <div className="relative flex gap-4 mt-8 mb-auto">
-          <Link
-            download={true}
-            target="_blank"
-            href={"/resume.pdf"}
-            className="flex xl:hidden"
-          >
-            <FancyButtonAlt icon={<PiFilePdfFill />} title="Download Resume" />
-          </Link>
-
-          <div className="hidden xl:flex">
-            <FancyButtonAlt icon={<FaRegCopy />} title="Copy Email" />
-          </div>
+        <div className="relative flex items-center gap-3 mt-2">
+          {socials.map(({ name, Icon, link }) => (
+            <Link
+              key={name}
+              href={link}
+              target="_blank"
+              className="size-9 rounded-lg bg-black border border-white/30 flex items-center justify-center text-white hover:border-[#61cc9c] transition-colors"
+            >
+              <Icon className="text-[18px]" />
+            </Link>
+          ))}
         </div>
-
-        <span className="hidden md:flex relative text-sm md:text-base">
-          @infinity Studios
-        </span>
       </div>
 
       <div className="flex flex-col items-center p-4 relative min-h-[250px] border border-white/[25%] xl:row-span-2 col-span-3 xl:col-span-2 bg-black/[20%] backdrop-blur-md">

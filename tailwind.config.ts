@@ -1,9 +1,7 @@
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+import type { Config, PluginAPI } from "tailwindcss/types/config";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -26,23 +24,23 @@ module.exports = {
       keyframes: {
         spotlight: {
           "0%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translate(-72%, -62%) scale(0.5)",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
             transform: "translate(-50%,-40%) scale(1)",
           },
         },
         animateSVG: {
           "0%": {
-            strokeDashoffset: 1100,
+            strokeDashoffset: "1100",
           },
           "50%": {
-            strokeDashoffset: 0,
+            strokeDashoffset: "0",
           },
           "100%": {
-            strokeDashoffset: 1100,
+            strokeDashoffset: "1100",
           },
         },
         moveHorizontal: {
@@ -80,18 +78,18 @@ module.exports = {
         },
         animateSkills: {
           "0%": {
-            left: "100%",
+            transform: "translateX(0)",
           },
           "100%": {
-            left: "-250px",
+            transform: "translateX(var(--marquee-distance, 0px))",
           },
         },
         animateSkillsReverse: {
           "0%": {
-            right: "100%",
+            transform: "translateX(var(--marquee-distance, 0px))",
           },
           "100%": {
-            right: "-250px",
+            transform: "translateX(0)",
           },
         },
         strokeFill: {
@@ -114,10 +112,15 @@ module.exports = {
   plugins: [addVariablesForColors],
 };
 
+export default config;
+
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
-function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
+function addVariablesForColors({ addBase, theme }: PluginAPI) {
+  const allColors = flattenColorPalette(theme("colors")) as Record<
+    string,
+    string
+  >;
+  const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
 

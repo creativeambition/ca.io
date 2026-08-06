@@ -3,16 +3,16 @@ import { morona } from "@/lib/fonts";
 import { useEffect } from "react";
 
 const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
-  let animateInClass =
+  const animateInClass =
     "translate-y-[-100%] transition-transform duration-[0.5s]";
-  let animateOutClass =
+  const animateOutClass =
     "translate-y-[-200%] transition-transform duration-[0.5s]";
-  let animateResetClass = "translate-y-[0] duration-[0s]";
+  const animateResetClass = "translate-y-[0] duration-[0s]";
 
   const setupTextAnimation = (
     delay: boolean,
-    placeholder: any,
-    elements: any
+    placeholder: HTMLElement,
+    elements: NodeListOf<HTMLElement>
   ) => {
     let index = 0;
 
@@ -22,7 +22,7 @@ const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
       placeholder.style.width = `${elements[index].offsetWidth + 40}px`;
     }
 
-    let currentElement = elements[index];
+    const currentElement = elements[index];
 
     currentElement.classList.add(...animateInClass.split(" "));
     if (delay) {
@@ -51,7 +51,7 @@ const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
         placeholder.style.width = `${elements[index].offsetWidth + 50}px`;
       }
 
-      let currentElement = elements[index];
+      const currentElement = elements[index];
       currentElement.classList.remove(...animateOutClass.split(" "));
       currentElement.classList.remove(...animateResetClass.split(" "));
       currentElement.classList.add(...animateInClass.split(" "));
@@ -74,8 +74,10 @@ const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
   useEffect(() => {
     setupTextAnimation(
       false,
-      document.querySelector(".placeholder"),
-      document.querySelectorAll(".placeholder .element")
+      document.querySelector(".placeholder") as HTMLElement,
+      document.querySelectorAll(
+        ".placeholder .element"
+      ) as NodeListOf<HTMLElement>
     );
   }, []);
 

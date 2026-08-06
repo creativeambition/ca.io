@@ -14,10 +14,10 @@ const UselessFacts = () => {
         const parsedData = JSON.parse(data);
         setFact(parsedData);
       })
-      .catch((error) => {
+      .catch(() => {
         setError(true);
       })
-      .finally(setLoading(false));
+      .finally(() => setLoading(false));
   }, []);
 
   return (

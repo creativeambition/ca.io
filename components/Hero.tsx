@@ -1,4 +1,4 @@
-import { morona, sacramento, stretch } from "@/lib/fonts";
+import { sacramento, stretch } from "@/lib/fonts";
 import { FancyButton } from "./ui/FancyButton";
 
 function Hero() {
@@ -8,7 +8,6 @@ function Hero() {
       className="relative flex flex-col min-h-[100vh]  px-2 items-center w-screen"
     >
       <div className="relative flex flex-col items-center w-fit mt-[100px] md:mt-[120px]">
-        <span className={`text-base sm:text-lg text-gray-400 mb-4`}>ca.io</span>
         <div className="flex flex-col items-center gap-3 lg:gap-5">
           <h1
             className={`${stretch.className} text-4xl sm:text-5xl md:text-7xl 2xl:text-8xl`}
@@ -18,7 +17,7 @@ function Hero() {
 
           <div className="w-full flex items-center gap-4 md:gap-8">
             <span
-              className={`${morona.className} text-center text-2xl sm:text-3xl md:text-6xl xl:text-[50px] 2xl:text-[60px] gap-4`}
+              className={`${sacramento.className} text-center text-3xl sm:text-4xl md:text-6xl xl:text-[50px] 2xl:text-[60px] gap-4`}
             >
               problems require
             </span>

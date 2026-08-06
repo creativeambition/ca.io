@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState, type CSSProperties } from "react";
 
 const SkillRow = memo(function SkillRow({
   skills,
@@ -9,83 +9,116 @@ const SkillRow = memo(function SkillRow({
   skills: { name: string; img: string }[];
   reverse: boolean;
 }) {
-  const [mdBreakPoint, setMdBreakPoint] = useState(false);
-
-  const skillsRef = useRef(null);
-  const skillCardsRef = useRef([]);
+  const [rowWidth, setRowWidth] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const firstCopyRef = useRef<HTMLDivElement>(null);
+  const secondCopyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const options = {
-      root: null,
-      threshold: 0,
-      rootMargin: "50px",
+    const update = () => {
+      const first = firstCopyRef.current;
+      const second = secondCopyRef.current;
+      setOffset(
+        first && second
+          ? second.getBoundingClientRect().left -
+              first.getBoundingClientRect().left
+          : 0
+      );
+      setRowWidth(rowRef.current?.clientWidth ?? 0);
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const cards = entry.target.querySelectorAll("#skill-element");
-        const playState = entry.isIntersecting ? "running" : "paused";
-
-        cards.forEach((card) => {
-          (card as HTMLElement).style.animationPlayState = playState;
-        });
-      });
-    }, options);
-
-    const skillsElement = document.querySelector("#skills");
-    if (skillsElement) observer.observe(skillsElement);
+    const observer = new ResizeObserver(update);
+    if (rowRef.current) observer.observe(rowRef.current);
+    if (firstCopyRef.current) observer.observe(firstCopyRef.current);
+    if (secondCopyRef.current) observer.observe(secondCopyRef.current);
+    observer.observe(document.documentElement);
+    update();
 
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setMdBreakPoint(window.innerWidth > 768);
-    });
+    const row = rowRef.current;
+    if (!row) return;
 
-    resizeObserver.observe(document.documentElement);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (trackRef.current) {
+          trackRef.current.style.animationPlayState = entry.isIntersecting
+            ? "running"
+            : "paused";
+        }
+      },
+      { rootMargin: "100px" }
+    );
 
-    return () => resizeObserver.disconnect();
+    observer.observe(row);
+
+    return () => observer.disconnect();
   }, []);
 
-  let width = mdBreakPoint
-    ? `${skills.length * 250}px`
-    : `${skills.length * 150}px`;
+  const copies = Math.max(2, Math.ceil(rowWidth / Math.max(offset, 1)) + 1);
+  const duration = Math.max(12, offset / 20);
+
+  const trackStyle = {
+    animationDuration: `${duration}s`,
+    willChange: "transform",
+    "--marquee-distance": offset ? `-${offset}px` : undefined,
+  } as CSSProperties;
 
   return (
     <div
-      className={`relative h-[100px] flex items-center overflow-hidden`}
-      style={{
-        width: `${width}`,
-        maskImage: "radial-gradient(circle, black, transparent)",
-      }}
+      ref={rowRef}
+      className="relative w-full h-[72px] md:h-[80px] flex items-center overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_32px,black_calc(100%_-_32px),transparent)]"
     >
-      {skills.map((skill: { name: string; img: string }, index: number) => (
-        <div
-          key={index}
-          id="skill-element"
-          className={`absolute ${
-            reverse
-              ? "right-[100%] animate-animateSkillsReverse"
-              : "left-[100%] animate-animateSkills"
-          } h-[80px] md:h-[100px] w-[150px] md:w-[250px] bg-black rounded-lg border border-white/[50%] flex items-center justify-center transition-all`}
-          style={{
-            boxShadow: "0 10px 24px -20px #61cc9c",
-            animationDelay: `${(index * 30) / skills.length}s`,
-          }}
-        >
-          <Image
-            src={skill.img}
-            alt={`${skill.name} logo`}
-            height={100}
-            width={100}
-            className="absolute left-2 h-[80%] w-auto object-contain opacity-60"
-            loading="lazy"
-            sizes="(max-width: 768px) 150px, 250px"
-          />
-          <h1 className="z-10">{skill.name}</h1>
-        </div>
-      ))}
+      <div
+        ref={trackRef}
+        className={`flex w-max items-center gap-4 ${
+          reverse ? "animate-animateSkillsReverse" : "animate-animateSkills"
+        }`}
+        style={trackStyle}
+      >
+        {Array.from({ length: copies }, (_, copy) => (
+          <div
+            key={copy}
+            ref={
+              copy === 0
+                ? firstCopyRef
+                : copy === 1
+                  ? secondCopyRef
+                  : undefined
+            }
+            className="flex shrink-0 items-center gap-4"
+          >
+            {skills.map((skill, index) => (
+              <div
+                key={index}
+                className="flex h-[56px] md:h-[64px] shrink-0 items-center gap-3 rounded-full border border-white/20 bg-black/70 pl-2 pr-5"
+                style={{
+                  boxShadow: "0 10px 30px -18px #61cc9c",
+                }}
+              >
+                <span className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full border border-[#61cc9c]/25 bg-[#61cc9c]/15">
+                  <Image
+                    src={skill.img}
+                    alt={`${skill.name} logo`}
+                    height={40}
+                    width={40}
+                    className="size-5 md:size-6 object-contain"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </span>
+                <span className="whitespace-nowrap text-sm md:text-base font-medium text-white/95">
+                  {skill.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 });

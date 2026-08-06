@@ -1,26 +1,10 @@
 "use client";
-import Lenis from "lenis";
 import { useEffect } from "react";
+import { startSmoothScroll } from "@/lib/smoothScroll";
 
 const SmoothScroll = () => {
-  useEffect(() => {
-    const lenis = new Lenis();
+  useEffect(() => startSmoothScroll(), []);
 
-    lenis.on("scroll", () => {});
-
-    let animationFrameId;
-
-    function RAF(time) {
-      lenis.raf(time);
-      animationFrameId = requestAnimationFrame(RAF);
-    }
-
-    animationFrameId = requestAnimationFrame(RAF);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
   return <></>;
 };
 

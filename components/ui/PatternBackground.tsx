@@ -5,7 +5,7 @@ function PatternBackground() {
     const selectedIndices = new Set<number>();
 
     while (selectedIndices.size < 5) {
-      let pathIndex = Math.floor(Math.random() * paths.length);
+      const pathIndex = Math.floor(Math.random() * paths.length);
       selectedIndices.add(pathIndex);
     }
 
@@ -23,22 +23,35 @@ function PatternBackground() {
   };
 
   useEffect(() => {
-    let paths: NodeListOf<SVGPathElement> =
-      document.querySelectorAll("#pattern-bg path");
+    const paths = document.querySelectorAll(
+      "#pattern-bg path"
+    ) as NodeListOf<SVGPathElement>;
+    if (!paths.length) return;
 
-    let animationFrameId: number;
-    const animatePaths = () => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    let intervalId;
+
+    const tick = () => {
+      if (document.hidden || reduceMotion) return;
       fillPath(paths);
-      animationFrameId = requestAnimationFrame(() =>
-        setTimeout(animatePaths, 6000)
-      );
     };
-    animatePaths();
+
+    const onVisibilityChange = () => {
+      clearInterval(intervalId);
+      if (!document.hidden) {
+        intervalId = setInterval(tick, 6000);
+      }
+    };
+
+    onVisibilityChange();
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 

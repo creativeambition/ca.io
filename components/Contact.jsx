@@ -62,7 +62,7 @@ function Contact() {
       <footer
         className={`${poiret_one.className} mt-auto w-full flex justify-center gap-2 opacity-[70%]`}
       >
-        &copy;<span>infinity studios, 2025</span>
+        &copy;<span>infinity studios, 2026</span>
       </footer>
     </div>
   );

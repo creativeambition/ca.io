@@ -1,36 +1,76 @@
+"use client";
 import { montserrat_alternates, morona } from "@/lib/fonts";
 import { projects } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { useRef } from "react";
+import { FaArrowRightLong, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 function Projects() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (dir: number) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-card]");
+    const step = card ? card.offsetWidth + el.clientWidth * 0.05 : el.clientWidth;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
   return (
     <div
       id="projects"
-      className="relative w-screen min-h-[100vh] flex flex-col items-center justify-center py-10 md:py-20 md:pb-20 lg:pt-[80px] xl:mt-20 gap-8"
+      className="relative w-screen min-h-[100vh] flex flex-col items-center justify-center py-10 md:py-20 md:pb-20 lg:pt-[40px] gap-8"
     >
-      <div className={`flex flex-col items-center text-2xl`}>
+      <div className={`flex flex-col items-center text-2xl mb-8 md:mb-12`}>
         <span className={`opacity-80 font-normal ${morona.className}`}>
           collection of my
         </span>
         <h1 className={`text-4xl md:text-4xl font-medium`}>recent projects</h1>
       </div>
 
-      <div className="relative flex items-center w-full h-[50vh] md:h-[70vh] lg:h-[80vh] translate-y-[-20px] overflow-hidden">
-        <div className="absolute overflow-hidden left-0 w-full h-full before:absolute before:content-[''] before:top-[-1px] before:left-[50%] before:-translate-x-[50%] before:w-[110%] before:h-[30%] before:rounded-[100%] before:translate-y-[-70%] before:bg-[#09130f] before:z-10 after:absolute after:content-[''] after:bottom-[-1px] after:left-[50%] after:-translate-x-[50%] after:w-[110%] after:h-[30%] after:rounded-[100%] after:translate-y-[70%] after:bg-[#09130f] after:z-10"></div>
+      <div
+        className="relative flex items-center w-full h-[50vh] md:h-[70vh] lg:h-[80vh] translate-y-[-20px] overflow-hidden"
+        style={{
+          maskImage:
+            "linear-gradient(black, black), radial-gradient(ellipse 55% 15% at 50% -6%, black 0, black 100%), radial-gradient(ellipse 55% 15% at 50% 106%, black 0, black 100%)",
+          maskComposite: "exclude",
+          WebkitMaskImage:
+            "linear-gradient(black, black), radial-gradient(ellipse 55% 15% at 50% -6%, black 0, black 100%), radial-gradient(ellipse 55% 15% at 50% 106%, black 0, black 100%)",
+          WebkitMaskComposite: "xor",
+        }}
+      >
+        <button
+            type="button"
+            aria-label="Scroll left"
+            onClick={() => scrollByCard(-1)}
+            className="absolute left-3 md:left-4 top-1/2 z-20 -translate-y-1/2 size-11 md:size-12 rounded-full bg-black/45 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+          >
+            <FaChevronLeft className="text-lg md:text-xl" />
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll right"
+            onClick={() => scrollByCard(1)}
+            className="absolute right-3 md:right-4 top-1/2 z-20 -translate-y-1/2 size-11 md:size-12 rounded-full bg-black/45 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+          >
+            <FaChevronRight className="text-lg md:text-xl" />
+          </button>
 
-        <div
-          className="relative flex items-center w-full h-full gap-[5%] overflow-x-scroll"
-          style={{
-            scrollSnapType: "x mandatory",
-          }}
-        >
+          <div
+            ref={scrollerRef}
+            className="relative flex items-center w-full h-full gap-[5%] overflow-x-scroll scrollbar-hide"
+            style={{
+              scrollSnapType: "x mandatory",
+            }}
+          >
           <div></div>
 
           {projects.map((project, index) => (
             <div
               key={index}
-              className="relative min-w-[100%] h-full bg-[#61cc9c] snap-center flex flex-col items-center pt-14 md:pt-[100px] px-2 md:px-4"
+              data-card
+              className="relative min-w-[90%] md:min-w-[90%] h-full bg-[#61cc9c]/85 snap-center flex flex-col items-center pt-10 md:pt-16 px-2 md:px-4 rounded-t-[20px] md:rounded-t-[40px]"
             >
               <Link href="https://github.com/creativeambition" target="_blank">
                 <div
@@ -43,34 +83,20 @@ function Projects() {
                 </div>
               </Link>
 
-              <span className="text-base text-black/[80%] mt-2 max-w-[90%] md:max-w-[65%] lg:max-w-[28%] text-center font-medium">
+              <span className="text-sm font-medium text-black/[80%] mt-2 max-w-[90%] md:max-w-[65%] lg:max-w-[35%] text-center">
                 {project.description}
               </span>
 
-              <div className="flex mt-4 mb-5 justify-center gap-4">
-                {project.techs.map((tech, id) => (
-                  <div
-                    key={id}
-                    className="size-[40px] md:size-[50px]"
-                    style={{
-                      backgroundImage: `url(${tech})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "contain",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                  ></div>
-                ))}
+              <div className="relative flex-1 flex items-center justify-center w-full overflow-hidden mt-6 md:mt-8">
+                <Image
+                  src={project.thumbnail}
+                  alt={`${project.title} preview`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 90vw"
+                  className="object-cover object-top"
+                  loading="lazy"
+                />
               </div>
-
-              <div
-                className="flex-1 flex items-center justify-center w-full lg:w-[60%]"
-                style={{
-                  backgroundImage: `url(${project.thumbnail})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "top",
-                }}
-              ></div>
             </div>
           ))}
 

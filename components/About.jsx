@@ -48,9 +48,9 @@ function About() {
       <div className="relative min-h-[70vh] md:max-xl:min-h-[90vh] md:flex mt-[250px] md:mt-0 flex-1 mx-auto lg:ml-auto items-center justify-center lg:gap-8 md:px-2 w-full pointer-events-auto">
         <AboutCard detailsCard={false}>
           <Image
-            height={100}
-            width={100}
-            className="test-card absolute w-full h-full top-0 left-0 object-cover"
+            fill
+            sizes="(max-width: 768px) 85vw, 350px"
+            className="absolute top-0 left-0 object-cover"
             src={me}
             alt="me"
           />
