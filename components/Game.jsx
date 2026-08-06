@@ -1,5 +1,5 @@
 "use client";
-import { montserrat_alternates } from "@/lib/fonts";
+import { doto, montserrat_alternates } from "@/lib/fonts";
 import clsx from "clsx";
 import { createContext, useContext, useEffect, useState } from "react";
 import { bestMove, computeWinner } from "@/lib/gameUtils";
@@ -68,10 +68,12 @@ function Game() {
 
   const gameOverClass = gameData.gameOver && "opacity-0 transition";
 
+  const isPlayerTurn = gameData.playerTurn == "X" && !gameData.gameOver;
+
   return (
     <>
       <div
-        className="w-[300px] aspect-square border border-[#61cc9c]/[.2] rounded-md mx-auto overflow-hidden"
+        className="w-[300px] aspect-square rounded-2xl border border-[#61cc9c]/25 bg-white/[0.02] shadow-[0_0_40px_rgba(97,204,156,0.08)] backdrop-blur-sm overflow-hidden"
         onClick={startGame}
       >
         <GameState.Provider
@@ -87,20 +89,55 @@ function Game() {
       </div>
 
       <div
-        className={`${gameOverClass} w-full mt-2 flex flex-col items-center text-base transition-opacity`}
+        className={`${gameOverClass} w-full mt-3 flex flex-col items-center gap-2 transition-opacity`}
       >
-        <span>
-          {gameData.playerTurn == "X" ? "🔥It's Your turn" : "🤔Thinking..."}
-        </span>
-        <div
-          className={`${montserrat_alternates.className} w-full flex justify-between`}
+        <span
+          className={`inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide transition-colors ${
+            isPlayerTurn
+              ? "bg-[#61cc9c]/10 text-[#61cc9c] border border-[#61cc9c]/30"
+              : gameData.gameOver
+                ? "bg-white/5 text-white/50 border border-white/10"
+                : "bg-white/5 text-white/70 border border-white/10"
+          }`}
         >
-          <span>
-            🧠{gameData.playerName || "Guest"} {"{"} X {"}"}:{" "}
-            {gameData.scores.X || "_"}
+          {gameData.gameOver ? (
+            <span className="size-1.5 rounded-full bg-white/40" />
+          ) : isPlayerTurn ? (
+            <span className="size-1.5 rounded-full bg-[#61cc9c]" />
+          ) : (
+            <span className="flex items-center gap-1">
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className="size-1 rounded-full bg-white/60 animate-bounce"
+                  style={{ animationDelay: `${i * 150}ms` }}
+                />
+              ))}
+            </span>
+          )}
+          {gameData.gameOver
+            ? "Game over"
+            : isPlayerTurn
+              ? "Your turn"
+              : "AI thinking"}
+        </span>
+
+        <div
+          className={`${montserrat_alternates.className} w-full max-w-[300px] flex justify-between text-sm`}
+        >
+          <span className="inline-flex items-center gap-2">
+            <span className="flex size-6 items-center justify-center rounded-md border border-[#61cc9c]/30 bg-[#61cc9c]/10 text-sm font-semibold text-[#61cc9c] ${doto.className}">
+              X
+            </span>
+            <span className="opacity-80">{gameData.playerName || "Guest"}</span>
+            <b className="text-[#61cc9c]">{gameData.scores.X || "0"}</b>
           </span>
-          <span>
-            🤖 {"{"} O {"}"}: {gameData.scores.O || "_"}
+          <span className="inline-flex items-center gap-2">
+            <span className="opacity-80">ca.io</span>
+            <b className="text-[#61cc9c]">{gameData.scores.O || "0"}</b>
+            <span className="flex size-6 items-center justify-center rounded-md border border-white/15 bg-white/5 text-sm font-semibold text-white/80 ${doto.className}">
+              O
+            </span>
           </span>
         </div>
       </div>
@@ -185,37 +222,48 @@ function Board() {
   return (
     <div className="relative flex flex-col w-full h-full justify-center items-center">
       <div
-        className={`opacity-0 pointer-events-none absolute w-full h-full bg-black/[0.9] z-10 flex flex-col items-center justify-center cursor-default ${gameOverClass}`}
+        className={`opacity-0 pointer-events-none absolute w-full h-full bg-black/[0.85] backdrop-blur-md z-10 flex flex-col items-center justify-center gap-2 cursor-default ${gameOverClass}`}
       >
-        <span className="mt-8">Game Over!</span>
-        {gameData.winner == "X" || gameData.winner == "O" ? (
-          gameData.winner == "X" ? (
-            <span>You won! 😃🥳</span>
-          ) : (
-            <span className={`text-lg mt-auto`}>
-              🤖 <b className="text-[#61cc9c]">{gameData.winner}</b> wins!
+        <div className="flex flex-col items-center gap-3 px-6 text-center">
+          <span className="text-xs uppercase tracking-[0.25em] text-white/50">
+            Match result
+          </span>
+          <span
+            className={`${doto.className} text-3xl md:text-4xl font-bold text-[#61cc9c]`}
+          >
+            {gameData.winner == "X" ? (
+              <>You won! 🎉</>
+            ) : gameData.winner == "O" ? (
+              <>
+                AI{" "}
+                <b className="text-[#61cc9c]">{gameData.winner}</b> wins 🤖
+              </>
+            ) : (
+              <>
+                It&apos;s a <b className="text-[#61cc9c]">Tie!</b>
+              </>
+            )}
+          </span>
+
+          <div className="mt-3 flex items-center justify-center gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-2 text-sm">
+            <span className="inline-flex items-center gap-1.5">
+              <b className="text-[#61cc9c]">{gameData.scores.X}</b>
+              <span className="opacity-75">{gameData.playerName}</span>
             </span>
-          )
-        ) : (
-          <b className="text-[#61cc9c] mt-auto">{gameData.winner}</b>
-        )}
+            <span className="font-bold text-white/25">vs</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="opacity-75">ca.io</span>
+              <b className="text-[#61cc9c]">{gameData.scores.O}</b>
+            </span>
+          </div>
+        </div>
 
         <button
           onClick={resetBoard}
-          className="mt-4 bg-[#61cc9c] px-6 py-2 rounded-md"
+          className="mt-4 rounded-full bg-[#61cc9c] px-8 py-2.5 text-black font-semibold text-sm transition-transform hover:scale-105 active:scale-95 hover:shadow-[0_0_25px_rgba(97,204,156,0.5)]"
         >
-          <span className="text-black font-medium active:scale-75 transition-transform">
-            Play Again
-          </span>
+          Play Again
         </button>
-
-        <div className="mt-auto mb-12 flex flex-col gap-2 items-center">
-          <span>
-            {gameData.playerName} {"{ "}X{" }"}: {gameData.scores.X}
-            <span className="text-lg mx-4">vs</span> ca.io {"{ "}O{" }"}:{" "}
-            {gameData.scores.O}
-          </span>
-        </div>
       </div>
 
       <div className="flex">
@@ -225,26 +273,26 @@ function Board() {
       </div>
       <>
         <hr
-          className="pointer-events-none absolute left-[100px] translate-x-[-50%] h-[90%] border-none w-[1.5px]"
+          className="pointer-events-none absolute left-[100px] translate-x-[-50%] h-[85%] border-none w-[1.5px]"
           style={{
             backgroundImage: "linear-gradient(#61cc9c, transparent, #61cc9c)",
           }}
         />
         <hr
-          className="pointer-events-none absolute left-[200px] translate-x-[-50%] h-[90%] border-none w-[1.5px]"
+          className="pointer-events-none absolute left-[200px] translate-x-[-50%] h-[85%] border-none w-[1.5px]"
           style={{
             backgroundImage: "linear-gradient(#61cc9c, transparent, #61cc9c)",
           }}
         />
         <hr
-          className="pointer-events-none absolute top-[100px] translate-y-[-50%] w-[90%] border-none h-[1.5px]"
+          className="pointer-events-none absolute top-[100px] translate-y-[-50%] w-[85%] border-none h-[1.5px]"
           style={{
             backgroundImage:
               "linear-gradient(90deg, transparent, #61cc9c, transparent)",
           }}
         />
         <hr
-          className="pointer-events-none absolute top-[200px] translate-y-[-50%] w-[90%] border-none h-[1.5px]"
+          className="pointer-events-none absolute top-[200px] translate-y-[-50%] w-[85%] border-none h-[1.5px]"
           style={{
             backgroundImage:
               "linear-gradient(90deg, transparent, #61cc9c, transparent)",
@@ -270,6 +318,7 @@ function Square({ id }) {
 
   function handleMove() {
     if (gameData.moves[id] || gameData.gameOver) return;
+    if (gameData.playerTurn !== "X") return;
 
     setGameData((prev) => {
       const moves = [...prev.moves];
@@ -307,20 +356,35 @@ function Square({ id }) {
     });
   }
 
-  const winningCombinationClassName =
-    gameData.winningCombination?.includes(id)
-      ? "bg-[#61cc9c] text-black font-bold border-2 border-black"
-      : "";
+  const winning = gameData.winningCombination?.includes(id);
+  const value = gameData.moves[id];
+  const playable = !gameData.gameOver && gameData.playerTurn == "X" && !value;
 
   return (
     <div
       className={clsx(
-        `${winningCombinationClassName} size-[100px] flex items-center justify-center cursor-grab active:cursor-grabbing transition-colors rounded-lg`,
-        gameData.playerTurn == "O" && `pointer-events-none cursor-no-drop`
+        "size-[100px] flex items-center justify-center rounded-lg transition-all duration-150",
+        playable &&
+          "cursor-pointer hover:bg-[#61cc9c]/10 active:scale-90",
+        !playable &&
+          "cursor-default",
+        winning && "bg-[#61cc9c]"
       )}
       onClick={handleMove}
     >
-      <span className={`text-4xl`}>{gameData.moves[id]}</span>
+      {value && (
+        <span
+          className={clsx(
+            "text-4xl font-bold animate-[pop_0.25s_ease-out]",
+            value == "X"
+              ? "text-[#61cc9c] drop-shadow-[0_0_8px_rgba(97,204,156,0.6)]"
+              : "text-white/85",
+            winning && "text-black drop-shadow-none"
+          )}
+        >
+          {value}
+        </span>
+      )}
     </div>
   );
 }

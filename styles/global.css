@@ -32,6 +32,19 @@ body {
   }
 }
 
+/* Full-width carousel slide with transparent curved top/bottom clipping */
+.slide-clip {
+  position: relative;
+  -webkit-mask-image: linear-gradient(black, black),
+    radial-gradient(ellipse 60% 40% at 50% -5%, transparent 0, black 60%),
+    radial-gradient(ellipse 60% 40% at 50% 105%, transparent 0, black 60%);
+  mask-image: linear-gradient(black, black),
+    radial-gradient(ellipse 60% 40% at 50% -5%, transparent 0, black 60%),
+    radial-gradient(ellipse 60% 40% at 50% 105%, transparent 0, black 60%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
 @keyframes bubbleUp {
   0% {
     translate: 0;
@@ -56,6 +69,31 @@ body {
   100% {
     translate: 0;
     z-index: 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes chipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

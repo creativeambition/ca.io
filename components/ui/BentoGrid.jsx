@@ -2,7 +2,6 @@ import { montserrat_alternates } from "@/lib/fonts";
 import CardCorners from "./CardCorners";
 import { InteractiveGradientBg } from "@/components/ui/InteractiveGradientBg";
 import { FancyButtonAlt } from "./FancyButton";
-import { socials } from "@/lib/utils";
 import { PiFilePdfFill } from "react-icons/pi";
 import { RiChatSmile3Line } from "react-icons/ri";
 import Link from "next/link";
@@ -128,25 +127,12 @@ const BentoGrid = memo(function BentoGrid() {
         <InteractiveGradientBg />
 
         <h1
-          className={`relative ${montserrat_alternates.className} font-semibold`}
+          className={`relative ${montserrat_alternates.className} font-semibold text-center`}
         >
           Scoreboard
         </h1>
 
         <DigitalScoreboard />
-
-        <div className="relative flex items-center gap-3 mt-2">
-          {socials.map(({ name, Icon, link }) => (
-            <Link
-              key={name}
-              href={link}
-              target="_blank"
-              className="size-9 rounded-lg bg-black border border-white/30 flex items-center justify-center text-white hover:border-[#61cc9c] transition-colors"
-            >
-              <Icon className="text-[18px]" />
-            </Link>
-          ))}
-        </div>
       </div>
 
       <div className="flex flex-col items-center p-4 relative min-h-[250px] border border-white/[25%] xl:row-span-2 col-span-3 xl:col-span-2 bg-black/[20%] backdrop-blur-md">

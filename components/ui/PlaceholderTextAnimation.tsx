@@ -1,5 +1,5 @@
 "use client";
-import { morona } from "@/lib/fonts";
+import { doto } from "@/lib/fonts";
 import { useEffect } from "react";
 
 const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
@@ -83,7 +83,7 @@ const PlaceholderTextAnimation = ({ texts }: { texts: string[] }) => {
 
   return (
     <div
-      className={`placeholder ${morona.className} translate-y-[5px] h-[50px] md:h-[70px] justify-center bg-gradient-to-br from-[#2ec480] to-[#0f397c] rounded-lg px-4 py-3 relative inline-flex items-center overflow-hidden transition-[width] duration-[0.5s]`}
+      className={`placeholder ${doto.className} translate-y-[5px] h-[50px] md:h-[70px] justify-center bg-gradient-to-br from-[#2ec480] to-[#0f397c] rounded-full px-5 md:px-6 py-3 relative inline-flex items-center overflow-hidden transition-[width] duration-[0.5s]`}
     >
       {texts.map((text, index) => (
         <span

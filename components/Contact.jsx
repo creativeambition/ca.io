@@ -1,7 +1,6 @@
-import { poiret_one } from "@/lib/fonts";
+import { doto, poiret_one } from "@/lib/fonts";
 import PlaceholderTextAnimation from "./ui/PlaceholderTextAnimation";
-import { contacts } from "@/lib/utils";
-import { BsArrowRight } from "react-icons/bs";
+import { socials } from "@/lib/utils";
 import Link from "next/link";
 
 function Contact() {
@@ -30,32 +29,28 @@ function Contact() {
           </div>
           <div>
             <span className="md:hidden">in the&nbsp;</span>
-            <span className="relative mt-3 before:absolute before:h-[20px] before:w-full before:border-t before:top-[120%] before:rotate-[-8deg] before:rounded-[100%]">
+            <span
+              className={`relative mt-3 before:absolute before:h-[20px] before:w-full before:border-t before:top-[120%] before:rotate-[-8deg] before:rounded-[100%] ${doto.className}`}
+            >
               digital world?
             </span>
           </div>
         </div>
       </div>
 
-      <div className="w-screen mt-auto flex flex-col items-center justify-around">
-        <div className="flex flex-wrap gap-5 md:gap-8 justify-around content-center">
-          {contacts.map((contact) => {
-            let cn =
-              contact.name == "Mail" || contact.name == "Fiverr"
-                ? "hidden md:flex"
-                : "flex";
-            return (
-              <Link
-                key={contact.name}
-                href={contact.link}
-                target="_blank"
-                className={`group ${cn} items-center cursor-pointer opacity-40 hover:opacity-100`}
-              >
-                <span className="">{contact.name}</span>
-                <BsArrowRight className="opacity-0 group-hover:opacity-100 group-hover:translate-x-2 group-hover:-translate-y-1 group-hover:-rotate-[35deg] transition-all" />
-              </Link>
-            );
-          })}
+      <div className="w-screen mt-auto flex flex-col items-center justify-around gap-8">
+        <div className="flex items-center gap-3">
+          {socials.map(({ name, Icon, link }) => (
+            <Link
+              key={name}
+              href={link}
+              target="_blank"
+              aria-label={name}
+              className="size-10 rounded-lg bg-black border border-white/30 flex items-center justify-center text-white hover:border-[#61cc9c] hover:text-[#61cc9c] transition-colors"
+            >
+              <Icon className="text-[18px]" />
+            </Link>
+          ))}
         </div>
       </div>
 

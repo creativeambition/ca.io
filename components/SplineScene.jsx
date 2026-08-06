@@ -54,7 +54,7 @@ export default function SplineScene() {
 
       {inView && (
         <Suspense fallback={null}>
-          <div className="absolute left-1/2 top-0 -translate-x-[35%] w-[135%] h-full sm:w-[122%] sm:left-1/2 sm:-translate-x-1/2">
+          <div className="absolute left-0 top-0 w-[135%] h-full sm:w-[122%] sm:left-1/2 sm:-translate-x-1/2">
             <SplineComponent scene="https://prod.spline.design/YTurGkXAz-yWLxOO/scene.splinecode" />
           </div>
         </Suspense>

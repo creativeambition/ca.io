@@ -20,23 +20,31 @@ const SkillRow = memo(function SkillRow({
     const update = () => {
       const first = firstCopyRef.current;
       const second = secondCopyRef.current;
-      setOffset(
+      const nextOffset =
         first && second
-          ? second.getBoundingClientRect().left -
-              first.getBoundingClientRect().left
-          : 0
-      );
-      setRowWidth(rowRef.current?.clientWidth ?? 0);
+          ? second.offsetLeft - first.offsetLeft
+          : 0;
+      const nextRowWidth = rowRef.current?.clientWidth ?? 0;
+
+      setOffset((prev) => (Math.abs(prev - nextOffset) > 0.5 ? nextOffset : prev));
+      setRowWidth((prev) => (prev === nextRowWidth ? prev : nextRowWidth));
     };
 
-    const observer = new ResizeObserver(update);
+    const rafUpdate = () => requestAnimationFrame(update);
+
+    const observer = new ResizeObserver(rafUpdate);
     if (rowRef.current) observer.observe(rowRef.current);
     if (firstCopyRef.current) observer.observe(firstCopyRef.current);
     if (secondCopyRef.current) observer.observe(secondCopyRef.current);
-    observer.observe(document.documentElement);
     update();
 
-    return () => observer.disconnect();
+    document.fonts?.ready.then(rafUpdate).catch(() => {});
+    window.addEventListener("resize", rafUpdate);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", rafUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -59,7 +67,7 @@ const SkillRow = memo(function SkillRow({
     return () => observer.disconnect();
   }, []);
 
-  const copies = Math.max(2, Math.ceil(rowWidth / Math.max(offset, 1)) + 1);
+  const copies = Math.max(2, Math.min(4, Math.ceil(rowWidth / Math.max(offset, 1)) + 1));
   const duration = Math.max(12, offset / 20);
 
   const trackStyle = {
@@ -95,9 +103,10 @@ const SkillRow = memo(function SkillRow({
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex h-[56px] md:h-[64px] shrink-0 items-center gap-3 rounded-full border border-white/20 bg-black/70 pl-2 pr-5"
+                className="flex h-[56px] md:h-[64px] shrink-0 items-center gap-3 rounded-full border border-white/20 bg-black/70 pl-2 pr-5 animate-[chipFadeIn_0.4s_ease-out_both]"
                 style={{
-                  boxShadow: "0 10px 30px -18px #61cc9c",
+                  boxShadow: "5px 5px 0 rgba(97,204,156,0.28)",
+                  animationDelay: `${Math.min(index, 8) * 60}ms`,
                 }}
               >
                 <span className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full border border-[#61cc9c]/25 bg-[#61cc9c]/15">
