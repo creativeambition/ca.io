@@ -11,6 +11,5 @@
   <rect width="1600" height="1000" fill="#050807"/>
   <rect width="1600" height="1000" fill="url(#grid)"/>
   <rect width="1600" height="1000" fill="url(#glow)"/>
-  <text x="800.0" y="520.0" text-anchor="middle" font-family="Poppins, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="150" font-weight="600" fill="#ffffff">Dome</text>
-  <text x="800.0" y="630.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="42" fill="#61cc9c" letter-spacing="4">{ academic platform }</text>
+  <text x="800.0" y="520.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="56" fill="#61cc9c" letter-spacing="4">{ screenshot still compiling… }</text>
 </svg>

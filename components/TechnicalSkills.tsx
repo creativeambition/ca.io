@@ -66,9 +66,9 @@ function TechnicalSkills() {
           <p
             className={`max-w-md text-base md:text-lg text-white/85`}
           >
-            <code className="text-[#61cc9c]">Interfaces</code>,{" "}
-            <code className="text-[#61cc9c]">infrastructure</code>, and the{" "}
-            <code className="text-[#61cc9c]">intelligence</code> in between.
+            Mostly <code className="text-[#61cc9c]">TypeScript</code>,
+            sometimes <code className="text-[#61cc9c]">Python</code>, always{" "}
+            <s className="text-white/45 decoration-[#61cc9c]/70">Stack Overflow</s>{" "}<code className="text-[#61cc9c]">ChatGPT</code>.
           </p>
         </div>
 

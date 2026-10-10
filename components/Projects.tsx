@@ -46,9 +46,9 @@ function Projects() {
           <p
             className={`max-w-md text-base md:text-lg text-white/85`}
           >
-            From <code className="text-[#61cc9c]">e-commerce</code> to{" "}
-            <code className="text-[#61cc9c]">streaming</code> and{" "}
-            <code className="text-[#61cc9c]">AI</code> landing pages.
+            Graduated from <code className="text-[#61cc9c]">todo</code> apps
+            and <code className="text-[#61cc9c]">calculators</code> to things
+            people actually use.
           </p>
         </div>
 

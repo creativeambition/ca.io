@@ -170,7 +170,7 @@ export const projects: {
     techs: [],
     thumbnail: "/assets/ProjectThumbnails/dome.svg",
     description:
-      "Academic platform with role-specific dashboards for students, lecturers, and faculty staff; streamlines course management and timetable creation",
+      "Course management & timetabling for students, lecturers and staff",
   },
   {
     title: "SumurAI",

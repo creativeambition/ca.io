@@ -200,7 +200,7 @@ function BentoGrid() {
             <b className="text-white/80">O</b>
           </span>
         </div>
-        <div className="relative my-auto flex w-full flex-col items-center">
+        <div className="relative flex w-full flex-1 flex-col items-center">
           <DynamicGame />
         </div>
       </Card>
@@ -208,20 +208,22 @@ function BentoGrid() {
       {isDesktop && (
         <Card className="items-center justify-center gap-3 min-h-[260px] md:col-span-3 md:order-2 xl:order-none xl:col-span-1">
           <CardTitle>Résumé</CardTitle>
-          <div className="relative w-[55%] flex-1 min-h-[120px] overflow-hidden">
-            <Image
-              src="/assets/res_illustration.png"
-              alt=""
-              fill
-              sizes="(max-width: 1280px) 25vw, 10vw"
-              className="object-cover object-top"
+          <div className="flex w-full flex-1 flex-col items-center">
+            <div className="relative w-[55%] flex-1 min-h-[120px] overflow-hidden">
+              <Image
+                src="/assets/res_illustration.png"
+                alt=""
+                fill
+                sizes="(max-width: 1280px) 25vw, 10vw"
+                className="object-cover object-top"
+              />
+            </div>
+            <FancyButtonAlt
+              link="/resume.pdf"
+              icon={<PiFilePdfFill />}
+              title="Download"
             />
           </div>
-          <FancyButtonAlt
-            link="/resume.pdf"
-            icon={<PiFilePdfFill />}
-            title="Download"
-          />
         </Card>
       )}
     </div>

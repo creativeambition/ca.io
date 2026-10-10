@@ -51,13 +51,6 @@ function Contact() {
           </Link>
         </div>
 
-        <Link
-          href={`mailto:${EMAIL}`}
-          className="mt-4 text-sm text-white/60 hover:text-[#61cc9c] transition-colors"
-        >
-          {EMAIL}
-        </Link>
-
         <div className="mt-10 flex items-center gap-3">
           {socials.map(({ name, Icon, link }) => (
             <Link

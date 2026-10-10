@@ -6,30 +6,31 @@ import { bestMove, computeWinner } from "@/lib/gameUtils";
 
 const GameState = createContext(null);
 
+const initialGameData = {
+  moves: Array.from({ length: 9 }).fill(null),
+  moveCount: 0,
+  playerTurn: "X",
+  gameOver: false,
+  winner: null,
+  scores: { X: 0, O: 0 },
+  winningCombination: null,
+  numberOfGames: 0,
+};
+
+// The game is client-only (loaded with ssr: false), so saved progress can be
+// read while creating state, before the save effect below can overwrite it.
+function loadGameData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("GameData"));
+    if (saved?.scores) return { ...initialGameData, ...saved };
+  } catch {
+    // unreadable or unavailable storage: start fresh
+  }
+  return initialGameData;
+}
+
 function Game() {
-  const [gameData, setGameData] = useState({
-    moves: Array.from({ length: 9 }).fill(null),
-    moveCount: 0,
-    playerTurn: "X",
-    gameOver: false,
-    winner: null,
-    scores: { X: 0, O: 0 },
-    winningCombination: null,
-    numberOfGames: 0,
-  });
-
-  useEffect(() => {
-    let prevSessionData = null;
-    try {
-      prevSessionData = JSON.parse(localStorage.getItem("GameData"));
-    } catch {
-      prevSessionData = null;
-    }
-
-    if (prevSessionData?.scores) {
-      queueMicrotask(() => setGameData(prevSessionData));
-    }
-  }, []);
+  const [gameData, setGameData] = useState(loadGameData);
 
   useEffect(() => {
     try {
@@ -47,7 +48,7 @@ function Game() {
   return (
     <>
       <div
-        className="w-[300px] aspect-square rounded-2xl border border-[#61cc9c]/25 bg-white/[0.02] shadow-[0_0_40px_rgba(97,204,156,0.08)] backdrop-blur-sm overflow-hidden"
+        className="my-auto w-[300px] aspect-square rounded-2xl border border-[#61cc9c]/25 bg-white/[0.02] shadow-[0_0_40px_rgba(97,204,156,0.08)] backdrop-blur-sm overflow-hidden"
       >
         <GameState.Provider
           value={{
@@ -62,29 +63,23 @@ function Game() {
       </div>
 
       <div
-        className={`${gameOverClass} mt-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 transition-opacity`}
+        className={`${gameOverClass} mt-4 grid w-full grid-cols-[1fr_auto_1fr] items-stretch gap-2 transition-opacity`}
       >
-        <span className="flex min-w-0 items-center gap-2 text-sm">
-          <span
-            className={`${doto.className} flex size-6 shrink-0 items-center justify-center rounded-md border border-[#61cc9c]/30 bg-[#61cc9c]/10 text-sm font-semibold text-[#61cc9c]`}
-          >
-            X
-          </span>
-          <span className="opacity-80">You</span>
-          <b className="text-[#61cc9c]">{gameData.scores.X || "0"}</b>
-        </span>
+        <PlayerPanel
+          mark="X"
+          name="You"
+          score={gameData.scores.X}
+          active={isPlayerTurn}
+        />
 
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium tracking-wide transition-colors ${
-            isPlayerTurn
-              ? "bg-[#61cc9c]/10 text-[#61cc9c] border border-[#61cc9c]/30"
-              : "bg-white/5 text-white/60 border border-white/10"
-          }`}
-        >
+        <div className="flex flex-col items-center justify-center gap-1 px-1">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/35">
+            vs
+          </span>
           {isPlayerTurn ? (
-            <span className="size-1.5 rounded-full bg-[#61cc9c]" />
+            <span className="text-[11px] text-[#61cc9c]">your move</span>
           ) : (
-            <span className="flex items-center gap-0.5">
+            <span className="flex h-[16px] items-center gap-0.5" aria-label="thinking">
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
@@ -94,24 +89,62 @@ function Game() {
               ))}
             </span>
           )}
-          {isPlayerTurn ? "Your move" : "Thinking"}
-        </span>
+        </div>
 
-        <span className="flex items-center justify-end gap-2 text-sm">
-          <b className="text-white/85">{gameData.scores.O || "0"}</b>
-          <span className="opacity-80">ca.io</span>
-          <span
-            className={`${doto.className} flex size-6 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-sm font-semibold text-white/80`}
-          >
-            O
-          </span>
-        </span>
+        <PlayerPanel
+          mark="O"
+          name="ca.io"
+          score={gameData.scores.O}
+          active={!isPlayerTurn && !gameData.gameOver}
+          mirrored
+        />
       </div>
     </>
   );
 }
 
 export default Game;
+
+const pad = (n) => String(Math.max(0, Math.min(99, n || 0))).padStart(2, "0");
+
+// One side of the score bar; the player whose turn it is lights up.
+function PlayerPanel({ mark, name, score, active, mirrored = false }) {
+  return (
+    <div
+      className={clsx(
+        "flex min-w-0 items-center justify-between gap-2 rounded-lg border px-3 py-2 transition-all duration-300",
+        mirrored && "flex-row-reverse",
+        active
+          ? "border-[#61cc9c]/60 bg-[#61cc9c]/10 shadow-[0_0_18px_rgba(97,204,156,0.18)]"
+          : "border-white/10 bg-black/40 opacity-70"
+      )}
+    >
+      <span className={clsx("flex min-w-0 items-center gap-2", mirrored && "flex-row-reverse")}>
+        <span
+          className={clsx(
+            doto.className,
+            "flex size-6 shrink-0 items-center justify-center rounded-md border text-sm",
+            mark === "X"
+              ? "border-[#61cc9c]/30 bg-[#61cc9c]/10 text-[#61cc9c]"
+              : "border-white/15 bg-white/5 text-white/80"
+          )}
+        >
+          {mark}
+        </span>
+        <span className="truncate text-sm text-white/80">{name}</span>
+      </span>
+      <span
+        className={clsx(
+          doto.className,
+          "text-2xl leading-none tabular-nums",
+          mark === "X" ? "text-[#61cc9c]" : "text-white/90"
+        )}
+      >
+        {pad(score)}
+      </span>
+    </div>
+  );
+}
 
 function Board() {
   const { gameData, setGameData, bestMove } = useContext(GameState);
