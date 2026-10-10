@@ -95,7 +95,7 @@ export default function SplineScene() {
       {near && (
         <Suspense fallback={null}>
           <div
-            className={`absolute left-0 top-0 w-[135%] h-full sm:w-[122%] sm:left-1/2 sm:-translate-x-1/2 transition-opacity duration-700 ${
+            className={`absolute -left-[10%] top-0 w-[195%] h-full sm:w-[122%] sm:left-1/2 sm:-translate-x-1/2 transition-opacity duration-700 ${
               loaded ? "opacity-100" : "opacity-0"
             }`}
           >

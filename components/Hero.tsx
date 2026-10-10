@@ -10,14 +10,14 @@ function Hero() {
       <div className="relative flex flex-col items-center w-fit mt-[100px] md:mt-[120px]">
         <div className="flex flex-col items-center gap-3 lg:gap-5">
           <h1
-            className={`${stretch.className} text-4xl sm:text-5xl md:text-7xl 2xl:text-8xl`}
+            className={`${stretch.className} text-[length:clamp(1.75rem,7vw_+_0.5rem,6rem)] leading-[1.1]`}
           >
             mmoodeern
           </h1>
 
           <div className="w-full flex items-center gap-4 md:gap-8">
             <span
-              className={`${sacramento.className} text-center text-3xl sm:text-4xl md:text-6xl xl:text-[50px] 2xl:text-[60px] gap-4`}
+              className={`${sacramento.className} text-center text-[length:clamp(1.4rem,5vw_+_0.5rem,3.75rem)] leading-[1.1] gap-4`}
             >
               problems require
             </span>
@@ -29,12 +29,12 @@ function Hero() {
 
           <div className="relative">
             <span
-              className={`${stretch.className} text-4xl sm:text-5xl md:text-7xl 2xl:text-8xl`}
+              className={`${stretch.className} text-[length:clamp(1.75rem,7vw_+_0.5rem,6rem)] leading-[1.1]`}
             >
               opptimaLL
             </span>{" "}
             <span
-              className={`${sacramento.className} absolute bottom-2 md:bottom-3 right-1 text-3xl sm:text-4xl md:text-6xl xl:text-[60px] 2xl:text-[80px]`}
+              className={`${sacramento.className} absolute bottom-2 md:bottom-3 right-1 text-[length:clamp(1.4rem,5vw_+_0.5rem,5rem)] leading-[1.1]`}
             >
               solutions
             </span>

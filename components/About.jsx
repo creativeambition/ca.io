@@ -9,7 +9,7 @@ function About() {
     >
       <div className={`flex md:flex-1 flex-col items-center md:items-start`}>
         <div className="flex flex-1 w-full gap-4">
-          <div className={`relative lg:z-30 hidden sm:flex flex-col mt-2 gap-2`}>
+          <div className={`relative lg:z-30 hidden sm:flex flex-col mt-2 gap-2 max-w-xl`}>
             <h2 className={`text-lg font-medium`}>
               Did you know ?{" "}
               <i className="text-[#61cc9c]">
@@ -26,11 +26,17 @@ function About() {
           >
             Hello there! I&apos;m
           </span>
-          <h1
-            className={`${stretch.className} text-4xl mb-5 font-semibold md:text-6xl 2xl:text-7xl md:text-nowrap`}
-          >
-            Chrys {"{ca.io}"}
-          </h1>
+          <div className="mb-5 flex flex-wrap items-baseline justify-center md:justify-start lg:justify-end gap-x-3">
+            <h1
+              className={`${stretch.className} text-4xl font-semibold md:text-6xl 2xl:text-7xl md:text-nowrap`}
+            >
+              Chrys.
+            </h1>
+            <p className="text-base md:text-xl text-white/60">
+              (yeah, with a &lsquo;y&rsquo;)
+            </p>
+          </div>
+
           <span
             className={`text-base md:text-xl`}
           >
