@@ -32,7 +32,7 @@ function About() {
             >
               Chrys.
             </h1>
-            <p className="text-base md:text-xl text-white/60">
+            <p className="text-base md:text-xl opacity-70">
               {"{"}yeah, with a &lsquo;y&rsquo;{"}"}
             </p>
           </div>

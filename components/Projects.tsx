@@ -48,7 +48,7 @@ function Projects() {
           >
             Graduated from <code className="text-[#61cc9c]">todo</code> apps
             and <code className="text-[#61cc9c]">calculators</code> to things
-            people actually use.
+            people actually use. <i className="opacity-70">{"{"} hopefully {"}"}</i>
           </p>
         </div>
 
