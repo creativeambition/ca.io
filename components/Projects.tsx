@@ -1,128 +1,130 @@
-"use client";
-import { montserrat_alternates, morona } from "@/lib/fonts";
+import { sacramento, stretch } from "@/lib/fonts";
 import { projects } from "@/lib/utils";
+import CardCorners from "@/components/ui/CardCorners";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { FaArrowRightLong, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
+
+const GITHUB = "https://github.com/creativeambition";
+
+const TECH_NAMES: Record<string, string> = {
+  astro: "Astro",
+  firebase: "Firebase",
+  html: "HTML",
+  huggingface: "Hugging Face",
+  js: "JavaScript",
+  next: "Next.js",
+  react: "React",
+  sass: "Sass",
+  solidjs: "SolidJS",
+  supabase: "Supabase",
+};
+
+const techName = (src: string) => {
+  const key = src.split("/").pop()?.split(".")[0] ?? "";
+  return TECH_NAMES[key] ?? key;
+};
 
 function Projects() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const count = projects.length;
-
-  const goTo = useCallback(
-    (next: number) => {
-      setIndex((next + count) % count);
-    },
-    [count]
-  );
-
-  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
-  const next = useCallback(() => goTo(index + 1), [goTo, index]);
-
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % count), 5000);
-    return () => clearInterval(id);
-  }, [paused, count]);
-
   return (
-    <div
+    <section
       id="projects"
-      className="relative w-screen min-h-[100vh] flex flex-col items-center justify-center py-6 md:py-20 md:pb-20 lg:pt-[40px] gap-6 md:gap-8"
+      className="relative w-screen flex flex-col gap-10 md:gap-14 py-20 md:py-28 px-6 md:px-[20px] lg:px-8 xl:px-12 2xl:px-24"
     >
-      <div className={`flex flex-col items-center text-2xl mb-4 md:mb-12`}>
-        <span className={`opacity-80 font-normal ${morona.className}`}>
-          collection of my
-        </span>
-        <h1 className={`text-4xl md:text-4xl font-medium`}>recent projects</h1>
-      </div>
-
-      <div
-        className="slide-clip relative flex items-center w-full h-[50vh] md:h-[70vh] lg:h-[80vh] translate-y-[-20px] overflow-hidden"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <button
-          type="button"
-          aria-label="Previous project"
-          onClick={prev}
-          className="absolute left-3 md:left-4 top-1/2 z-20 -translate-y-1/2 size-11 md:size-12 rounded-full bg-black/45 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
-        >
-          <FaChevronLeft className="text-lg md:text-xl" />
-        </button>
-        <button
-          type="button"
-          aria-label="Next project"
-          onClick={next}
-          className="absolute right-3 md:right-4 top-1/2 z-20 -translate-y-1/2 size-11 md:size-12 rounded-full bg-black/45 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
-        >
-          <FaChevronRight className="text-lg md:text-xl" />
-        </button>
-
-        <div className="relative flex items-center w-full h-full overflow-hidden">
-          <div
-            className="flex items-center w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-            style={{ transform: `translateX(-${index * 100}%)` }}
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col items-start">
+          <span
+            className={`${sacramento.className} mb-3 md:mb-5 text-2xl md:text-4xl`}
           >
-            {projects.map((project, i) => (
-              <div
-                key={i}
-                className="relative w-full flex-none h-full flex items-center justify-center"
-              >
-                <div className="w-full h-full flex flex-col items-center pt-10 md:pt-16 px-4 md:px-10 bg-[#61cc9c]/85">
-                  <Link
-                    href="https://github.com/creativeambition"
-                    target="_blank"
-                    className="group"
-                  >
-                    <div
-                      className={`flex flex-wrap items-center justify-center gap-2 md:gap-4 text-center text-2xl md:text-5xl lg:text-6xl text-black/[80%] font-bold ${montserrat_alternates.className}`}
-                    >
-                      {project.title}
-                      <div className="size-[20px] md:size-[30px] text-xl md:text-2xl group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:-rotate-[35deg] transition-transform">
-                        <FaArrowRightLong />
-                      </div>
-                    </div>
-                    <span className="block text-sm md:text-base font-medium text-black/[80%] mt-2 max-w-[90%] md:max-w-[75%] lg:max-w-[60%] text-center mx-auto">
-                      {project.description}
-                    </span>
-                  </Link>
-
-                  <div className="relative flex-1 w-full overflow-hidden mt-6 md:mt-8">
-                    <Image
-                      src={project.thumbnail}
-                      alt={`${project.title} preview`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 100vw"
-                      className="object-cover object-top"
-                      loading={i === 0 ? "eager" : "lazy"}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+            things I&apos;ve shipped
+          </span>
+          <h2
+            className={`${stretch.className} mb-4 md:mb-5 text-3xl md:text-5xl 2xl:text-6xl font-semibold md:text-nowrap`}
+          >
+            Selected <span className="text-[#61cc9c]">{"{work}"}</span>
+          </h2>
+          <p
+            className={`max-w-md text-base md:text-lg text-white/85`}
+          >
+            From <code className="text-[#61cc9c]">e-commerce</code> to{" "}
+            <code className="text-[#61cc9c]">streaming</code> and{" "}
+            <code className="text-[#61cc9c]">AI</code> landing pages.
+          </p>
         </div>
+
+        <Link
+          href={GITHUB}
+          target="_blank"
+          className="group flex items-center gap-2 self-start md:self-end text-sm md:text-base text-white/80 hover:text-[#61cc9c] transition-colors"
+        >
+          More on GitHub
+          <FaArrowRightLong className="group-hover:translate-x-1 transition-transform" />
+        </Link>
       </div>
 
-      <div className="flex items-center gap-3 -mt-4 z-10">
-        {projects.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to project ${i + 1}`}
-            onClick={() => goTo(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index
-                ? "w-8 bg-[#61cc9c]"
-                : "w-2 bg-[#61cc9c]/30 hover:bg-[#61cc9c]/60"
-            }`}
-          />
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {projects.map((project, i) => (
+          <Link
+            key={project.title}
+            href={project.link ?? GITHUB}
+            target="_blank"
+            className="group relative flex flex-col border border-white/[25%] bg-black/[40%] backdrop-blur-md p-3 md:p-4 hover:border-[#61cc9c]/60 transition-colors"
+          >
+            <CardCorners />
+
+            <div className="relative aspect-[16/10] w-full overflow-hidden border border-white/10">
+              <Image
+                src={project.thumbnail}
+                alt={`${project.title} preview`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            </div>
+
+            <div className="flex flex-1 flex-col gap-4 pt-4 md:pt-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-semibold text-[#61cc9c]">
+                    # {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3
+                    className={`text-xl md:text-2xl font-medium`}
+                  >
+                    {project.title}
+                  </h3>
+                  <p className="text-sm md:text-base opacity-70">
+                    {project.description}
+                  </p>
+                </div>
+                <FaArrowRightLong className="mt-7 shrink-0 text-xl text-white/70 group-hover:text-[#61cc9c] group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:-rotate-[35deg] transition-transform" />
+              </div>
+
+              <ul className="mt-auto flex flex-wrap gap-2">
+                {project.techs.map((tech) => (
+                  <li
+                    key={tech}
+                    title={techName(tech)}
+                    className="flex items-center gap-2 rounded-full border border-white/15 bg-black/70 py-1 pl-1 pr-3 text-xs text-white/80"
+                  >
+                    <span className="flex size-6 items-center justify-center rounded-full bg-white/5">
+                      <Image
+                        src={tech}
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="size-4 object-contain"
+                      />
+                    </span>
+                    {techName(tech)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 

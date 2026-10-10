@@ -32,46 +32,6 @@ body {
   }
 }
 
-/* Full-width carousel slide with transparent curved top/bottom clipping */
-.slide-clip {
-  position: relative;
-  -webkit-mask-image: linear-gradient(black, black),
-    radial-gradient(ellipse 60% 40% at 50% -5%, transparent 0, black 60%),
-    radial-gradient(ellipse 60% 40% at 50% 105%, transparent 0, black 60%);
-  mask-image: linear-gradient(black, black),
-    radial-gradient(ellipse 60% 40% at 50% -5%, transparent 0, black 60%),
-    radial-gradient(ellipse 60% 40% at 50% 105%, transparent 0, black 60%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
-}
-
-@keyframes bubbleUp {
-  0% {
-    translate: 0;
-  }
-  50% {
-    translate: 100px;
-  }
-  100% {
-    translate: 0;
-    z-index: 2;
-  }
-}
-
-@keyframes return {
-  0% {
-    translate: 0;
-    z-index: 2;
-  }
-  50% {
-    translate: 100px;
-  }
-  100% {
-    translate: 0;
-    z-index: 0;
-  }
-}
-
 @keyframes pop {
   0% {
     transform: scale(0.4);
@@ -86,21 +46,73 @@ body {
   }
 }
 
-@keyframes chipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+/* First-visit splash (components/Splash.jsx). JS fades it out when the page
+   is ready; this animation clears it anyway if JS never runs. */
+.splash {
+  animation: splashFallback 0.5s ease 3s forwards;
+}
+
+html[data-splash="seen"] .splash {
+  display: none;
+}
+
+@keyframes splashFallback {
   to {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 
-.details-card:hover {
-  animation: bubbleUp 0.4s ease forwards;
+/* Hero caption connector: a sine wave that flows right and fades out.
+   The strip inside slides via transform so it never repaints. */
+.hero-wave {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, black 20%, transparent);
+  mask-image: linear-gradient(to right, black 20%, transparent);
 }
 
-.details-card.return {
-  animation: return 0.4s ease forwards;
+.hero-wave::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='12' viewBox='0 0 40 12'%3E%3Cpath d='M0 6 Q10 0 20 6 T40 6' fill='none' stroke='%2361cc9c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 40px 12px;
+  background-position: 0 center;
+  will-change: transform;
+  animation: waveFlow 1.6s linear infinite;
 }
+
+@keyframes waveFlow {
+  to {
+    transform: translateX(40px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wave::before {
+    animation: none;
+  }
+}
+
+@keyframes orbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-spin {
+  animation: orbitSpin 60s linear infinite;
+}
+
+.orbit-spin-reverse {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none;
+  }
+}
+

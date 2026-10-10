@@ -8,7 +8,6 @@ const readGameData = () => {
     if (!raw) return null;
     const data = JSON.parse(raw);
     return {
-      playerName: data?.playerName || "Guest",
       scoreX: data?.scores?.X ?? 0,
       scoreO: data?.scores?.O ?? 0,
       games: data?.numberOfGames ?? 0,
@@ -19,28 +18,30 @@ const readGameData = () => {
   }
 };
 
+const defaultGameData = {
+  scoreX: 0,
+  scoreO: 0,
+  games: 0,
+  lastWinner: "-",
+};
+
 export default function DigitalScoreboard() {
-  const [data, setData] = useState({
-    playerName: "Guest",
-    scoreX: 0,
-    scoreO: 0,
-    games: 0,
-    lastWinner: "-",
-  });
+  const [data, setData] = useState(defaultGameData);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const refresh = () => {
-      setData(readGameData());
+      setData(readGameData() ?? defaultGameData);
       setReady(true);
     };
 
+    // "storage" covers other tabs; Game dispatches "gamedata" for this one.
     refresh();
     window.addEventListener("storage", refresh);
-    const id = window.setInterval(refresh, 1500);
+    window.addEventListener("gamedata", refresh);
     return () => {
       window.removeEventListener("storage", refresh);
-      window.clearInterval(id);
+      window.removeEventListener("gamedata", refresh);
     };
   }, []);
 
@@ -51,7 +52,7 @@ export default function DigitalScoreboard() {
       <span
         className={`${doto.className} text-sm tracking-[0.35em] text-[#61cc9c] uppercase`}
       >
-        {ready ? data.playerName : "Syncing"} vs ca.io
+        {ready ? "You" : "Syncing"} vs ca.io
       </span>
 
       <div className="flex items-end justify-center gap-8">

@@ -1,5 +1,4 @@
-import { FaFacebook, FaGithub, FaTiktok, FaYoutube } from "react-icons/fa6";
-import { AiFillInstagram } from "react-icons/ai";
+import { FaGithub, FaYoutube } from "react-icons/fa6";
 
 export const navItems = [
   {
@@ -9,6 +8,10 @@ export const navItems = [
   {
     name: "About",
     link: "about",
+  },
+  {
+    name: "Profile",
+    link: "profile",
   },
   {
     name: "Projects",
@@ -50,45 +53,18 @@ export const socials = [
     Icon: FaYoutube,
     link: "https://youtube.com/@creative-ambition/",
   },
-  {
-    name: "Instagram",
-    Icon: AiFillInstagram,
-    link: "https://instagram.com/_creative_ambition/",
-  },
-  {
-    name: "TikTok",
-    Icon: FaTiktok,
-    link: "https://tiktok.com/@creative_ambition/",
-  },
-  {
-    name: "Facebook",
-    Icon: FaFacebook,
-    link: "https://web.facebook.com/share/g/NY81ZaaMtJ6qrrPm/",
-  },
 ];
 
 export const FrontEndSkills = [
   {
-    name: "React",
-    img: "/assets/StackLogos/react.png",
-  },
-  {
-    name: "Tailwind",
-    img: "/assets/StackLogos/tailwind.png",
-  },
-  {
-    name: "Astro",
-    img: "/assets/StackLogos/astro.png",
+    name: "TypeScript",
+    img: "/assets/StackLogos/typescript.svg",
   },
 ];
 export const BackEndSkills = [
   {
     name: "Node",
     img: "/assets/StackLogos/node.png",
-  },
-  {
-    name: "Express",
-    img: "/assets/StackLogos/express.png",
   },
   {
     name: "Next",
@@ -105,20 +81,12 @@ export const dbSkills = [
     img: "/assets/StackLogos/postgres.png",
   },
   {
-    name: "MySQL",
-    img: "/assets/StackLogos/mysql.png",
-  },
-  {
     name: "Mongo DB",
     img: "/assets/StackLogos/mongo.png",
   },
   {
-    name: "Cloud Firestore",
-    img: "/assets/StackLogos/firestore.png",
-  },
-  {
-    name: "Supabase",
-    img: "/assets/StackLogos/supabase.png",
+    name: "Redis",
+    img: "/assets/StackLogos/redis.svg",
   },
 ];
 export const otherSkills = [
@@ -127,16 +95,102 @@ export const otherSkills = [
     img: "/assets/StackLogos/git.png",
   },
   {
+    name: "GitHub",
+    img: "/assets/StackLogos/github.svg",
+  },
+  {
     name: "AWS",
-    img: "/assets/StackLogos/aws.png",
+    img: "/assets/StackLogos/aws-white.png",
   },
   {
     name: "Google Cloud",
     img: "/assets/StackLogos/gcp.png",
   },
+  {
+    name: "Docker",
+    img: "/assets/StackLogos/docker.svg",
+  },
+  {
+    name: "Linux / Shell",
+    img: "/assets/StackLogos/linux.svg",
+  },
+];
+export const testingSkills = [
+  {
+    name: "Playwright",
+    img: "/assets/StackLogos/playwright.svg",
+  },
+];
+export const mlSkills = [
+  {
+    name: "Python",
+    img: "/assets/StackLogos/python.svg",
+  },
+  {
+    name: "PyTorch",
+    img: "/assets/StackLogos/pytorch.svg",
+  },
+  {
+    name: "TensorFlow",
+    img: "/assets/StackLogos/tensorflow.svg",
+  },
+  {
+    name: "scikit-learn",
+    img: "/assets/StackLogos/scikitlearn.svg",
+  },
+];
+export const aiEngineeringSkills = [
+  {
+    name: "Hugging Face",
+    img: "/assets/StackLogos/huggingface.svg",
+  },
+  {
+    name: "LangChain",
+    img: "/assets/StackLogos/langchain.svg",
+  },
 ];
 
-export const projects = [
+// `link` is optional; cards fall back to the GitHub profile.
+export const projects: {
+  title: string;
+  techs: string[];
+  thumbnail: string;
+  description: string;
+  link?: string;
+}[] = [
+  // Thumbnails for the first five are generated placeholders; swap in screenshots.
+  {
+    title: "Newhorizn",
+    techs: [],
+    thumbnail: "/assets/ProjectThumbnails/newhorizn.svg",
+    description: "Find and book accommodations",
+  },
+  {
+    title: "Dome",
+    techs: [],
+    thumbnail: "/assets/ProjectThumbnails/dome.svg",
+    description:
+      "Academic platform with role-specific dashboards for students, lecturers, and faculty staff; streamlines course management and timetable creation",
+  },
+  {
+    title: "SumurAI",
+    techs: ["/assets/StackLogos/huggingface.svg"],
+    thumbnail: "/assets/ProjectThumbnails/sumurai.svg",
+    description:
+      "AI chatbot running inference on the DeepSeek R1 model via Hugging Face",
+  },
+  {
+    title: "Flaura",
+    techs: [],
+    thumbnail: "/assets/ProjectThumbnails/flaura.svg",
+    description: "Automatic payment disbursements",
+  },
+  {
+    title: "GTM-Copilot",
+    techs: [],
+    thumbnail: "/assets/ProjectThumbnails/gtm-copilot.svg",
+    description: "Go-to-market copilot for solo founders",
+  },
   {
     title: "La Ultimate Collection",
     techs: [
@@ -146,7 +200,7 @@ export const projects = [
       "/assets/StackLogos/supabase.png",
     ],
     thumbnail: "/assets/ProjectThumbnails/LUC.webp",
-    description: "E-Commerce App",
+    description: "E-commerce app",
   },
   {
     title: "Movilla",
@@ -156,7 +210,7 @@ export const projects = [
       "/assets/StackLogos/firebase.png",
     ],
     thumbnail: "/assets/ProjectThumbnails/movilla.webp",
-    description: "Movie/TV streaming web-app featuring TMDB",
+    description: "Movie & TV streaming web app powered by TMDB",
   },
   {
     title: "Revo.Wallet",
@@ -166,24 +220,7 @@ export const projects = [
       "/assets/StackLogos/js.png",
     ],
     thumbnail: "/assets/ProjectThumbnails/revo.webp",
-    description: "FinTech SaaS Landing Page",
-  },
-  {
-    title: "Omini",
-    techs: ["/assets/StackLogos/react.png", "/assets/StackLogos/sass.png"],
-    thumbnail: "/assets/ProjectThumbnails/omini.webp",
-    description: "GPT-4o LLM - Landing Page",
-  },
-  {
-    title: "Zenchat",
-    techs: [
-      "/assets/StackLogos/next.png",
-      "/assets/StackLogos/react.png",
-      "/assets/StackLogos/sass.png",
-      "/assets/StackLogos/firebase.png",
-    ],
-    thumbnail: "/assets/ProjectThumbnails/z-chat.webp",
-    description: "chat app",
+    description: "FinTech SaaS landing page",
   },
   {
     title: "Infinity-Readers Club",
@@ -194,6 +231,6 @@ export const projects = [
       "/assets/StackLogos/firebase.png",
     ],
     thumbnail: "/assets/ProjectThumbnails/e-book.webp",
-    description: "E-book web-app",
+    description: "E-book web app",
   },
 ];

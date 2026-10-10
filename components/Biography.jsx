@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 function Biography() {
   return (
-    <div className="relative mt-20 min-h-[100vh] w-screen md:mt-[150px] py-[50px] lg:py-[100px] flex flex-col items-center px-2 md:px-[20px] lg:px-8 xl:px-12 2xl:px-24">
+    <div id="profile" className="relative mt-20 min-h-[100vh] w-screen md:mt-[150px] py-[50px] lg:py-[100px] flex flex-col items-center px-2 md:px-[20px] lg:px-8 xl:px-12 2xl:px-24">
       <div
         className={`${plaster.className} flex items-center justify-center w-full gap-1 sm:gap-2 text-[40px] md:text-[80px] lg:text-[100px] xl:text-9xl`}
       >

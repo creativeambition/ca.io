@@ -21,7 +21,10 @@ function Hero() {
             >
               problems require
             </span>
-            <div className="h-2 flex-1 bg-gray-50 rounded-lg"></div>
+            <div aria-hidden className="relative flex flex-1 items-center">
+              <span className="size-2 md:size-2.5 shrink-0 rounded-full bg-[#61cc9c] shadow-[0_0_12px_rgba(97,204,156,0.8)]" />
+              <span className="hero-wave relative h-3 flex-1" />
+            </div>
           </div>
 
           <div className="relative">
@@ -39,8 +42,8 @@ function Hero() {
         </div>
       </div>
 
-      <div className="mb-auto">
-        <FancyButton target="projects" />
+      <div className="mb-auto mt-12 md:mt-16">
+        <FancyButton target="projects" label="View my work" />
       </div>
     </div>
   );

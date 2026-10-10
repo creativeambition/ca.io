@@ -17,8 +17,6 @@ const config: Config = {
         third: "moveInCircle 40s linear infinite",
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
-        animateSkills: "animateSkills 30s linear infinite",
-        animateSkillsReverse: "animateSkillsReverse 30s linear infinite",
         strokeFill: "strokeFill 3s ease-in-out infinite"
       },
       keyframes: {
@@ -74,22 +72,6 @@ const config: Config = {
           },
           "100%": {
             transform: "translateY(-50%)",
-          },
-        },
-        animateSkills: {
-          "0%": {
-            transform: "translateX(0)",
-          },
-          "100%": {
-            transform: "translateX(var(--marquee-distance, 0px))",
-          },
-        },
-        animateSkillsReverse: {
-          "0%": {
-            transform: "translateX(var(--marquee-distance, 0px))",
-          },
-          "100%": {
-            transform: "translateX(0)",
           },
         },
         strokeFill: {

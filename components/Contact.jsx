@@ -1,45 +1,64 @@
-import { doto, poiret_one } from "@/lib/fonts";
-import PlaceholderTextAnimation from "./ui/PlaceholderTextAnimation";
+import { sacramento, stretch } from "@/lib/fonts";
 import { socials } from "@/lib/utils";
 import Link from "next/link";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { PiFilePdfFill } from "react-icons/pi";
+
+const EMAIL = "chrysayita@gmail.com";
 
 function Contact() {
   return (
-    <div
+    <section
       id="contact"
-      className="relative min-h-[100vh] flex flex-col items-center px-4 py-10 pb-4"
+      className="relative min-h-[90vh] w-screen flex flex-col px-6 md:px-[20px] lg:px-8 xl:px-12 2xl:px-24 pt-24 md:pt-32 pb-6"
     >
-      <span
-        className={`${poiret_one.className} mt-[80px] text-2xl text-gray-300`}
-      >
-        infinity studios
-      </span>
+      <div className="flex flex-1 flex-col items-center justify-center text-center">
+        <span
+          className={`${sacramento.className} mb-3 md:mb-5 text-2xl md:text-4xl`}
+        >
+          got something in mind?
+        </span>
+        <h2
+          className={`${stretch.className} mb-5 md:mb-6 text-4xl md:text-6xl 2xl:text-7xl font-semibold`}
+        >
+          Let&apos;s <span className="text-[#61cc9c]">{"{build}"}</span> it
+        </h2>
+        <p
+          className={`max-w-xl text-base md:text-lg text-white/85`}
+        >
+          Open to <code className="text-[#61cc9c]">full-time</code> roles,{" "}
+          <code className="text-[#61cc9c]">freelance</code> projects and{" "}
+          <code className="text-[#61cc9c]">collabs</code>. Based in Accra, happy
+          to work remote.
+        </p>
 
-      <div className="flex flex-col items-center justify-center gap-12 md:px-20 lg:px-[200px] mt-[30px] md:tracking-wide">
-        <div className="flex flex-col gap-2 md:gap-3 items-center text-center text-3xl md:text-5xl lg:text-5xl font-medium">
-          Ready to make your
-          <div className="flex items-center">
-            <PlaceholderTextAnimation
-              texts={["brand", "service", "business", "product"]}
-            />
-            <span className="flex whitespace-nowrap">
-              &nbsp;appearance&nbsp;
-              <span className="hidden md:flex">in the</span>
-            </span>
-          </div>
-          <div>
-            <span className="md:hidden">in the&nbsp;</span>
-            <span
-              className={`relative mt-3 before:absolute before:h-[20px] before:w-full before:border-t before:top-[120%] before:rotate-[-8deg] before:rounded-[100%] ${doto.className}`}
-            >
-              digital world?
-            </span>
-          </div>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            href={`mailto:${EMAIL}`}
+            className="group flex items-center gap-3 bg-[#61cc9c] px-6 py-3 font-medium text-black hover:bg-[#61cc9c]/85 transition-colors"
+          >
+            Say hello
+            <FaArrowRightLong className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link
+            href="/resume.pdf"
+            target="_blank"
+            download
+            className="flex items-center gap-3 border border-white/[25%] px-6 py-3 font-medium hover:border-[#61cc9c] hover:text-[#61cc9c] transition-colors"
+          >
+            <PiFilePdfFill className="text-xl" />
+            Résumé
+          </Link>
         </div>
-      </div>
 
-      <div className="w-screen mt-auto flex flex-col items-center justify-around gap-8">
-        <div className="flex items-center gap-3">
+        <Link
+          href={`mailto:${EMAIL}`}
+          className="mt-4 text-sm text-white/60 hover:text-[#61cc9c] transition-colors"
+        >
+          {EMAIL}
+        </Link>
+
+        <div className="mt-10 flex items-center gap-3">
           {socials.map(({ name, Icon, link }) => (
             <Link
               key={name}
@@ -54,12 +73,10 @@ function Contact() {
         </div>
       </div>
 
-      <footer
-        className={`${poiret_one.className} mt-auto w-full flex justify-center gap-2 opacity-[70%]`}
-      >
-        &copy;<span>infinity studios, 2026</span>
+      <footer className="mt-16 flex justify-center border-t border-white/10 pt-6 text-sm text-white/60">
+        &copy; {new Date().getFullYear()} Chrys {"{ca.io}"}
       </footer>
-    </div>
+    </section>
   );
 }
 

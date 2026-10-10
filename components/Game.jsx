@@ -1,5 +1,5 @@
 "use client";
-import { doto, montserrat_alternates } from "@/lib/fonts";
+import { doto } from "@/lib/fonts";
 import clsx from "clsx";
 import { createContext, useContext, useEffect, useState } from "react";
 import { bestMove, computeWinner } from "@/lib/gameUtils";
@@ -8,7 +8,6 @@ const GameState = createContext(null);
 
 function Game() {
   const [gameData, setGameData] = useState({
-    playerName: "",
     moves: Array.from({ length: 9 }).fill(null),
     moveCount: 0,
     playerTurn: "X",
@@ -27,7 +26,7 @@ function Game() {
       prevSessionData = null;
     }
 
-    if (prevSessionData?.playerName) {
+    if (prevSessionData?.scores) {
       queueMicrotask(() => setGameData(prevSessionData));
     }
   }, []);
@@ -35,36 +34,11 @@ function Game() {
   useEffect(() => {
     try {
       localStorage.setItem("GameData", JSON.stringify(gameData));
+      window.dispatchEvent(new Event("gamedata"));
     } catch {
       // ignore storage failures (e.g. private mode)
     }
   }, [gameData]);
-
-  function startGame() {
-    let prevSessionData = null;
-    try {
-      prevSessionData = JSON.parse(localStorage.getItem("GameData"));
-    } catch {
-      prevSessionData = null;
-    }
-
-    if (prevSessionData?.playerName) return;
-
-    let userInput = prompt(
-      "Enter your preferred player name, or cancel to use default -> Guest"
-    );
-    if (userInput) {
-      setGameData((prev) => ({
-        ...prev,
-        playerName: userInput,
-      }));
-    } else {
-      setGameData((prev) => ({
-        ...prev,
-        playerName: "Guest",
-      }));
-    }
-  }
 
   const gameOverClass = gameData.gameOver && "opacity-0 transition";
 
@@ -74,7 +48,6 @@ function Game() {
     <>
       <div
         className="w-[300px] aspect-square rounded-2xl border border-[#61cc9c]/25 bg-white/[0.02] shadow-[0_0_40px_rgba(97,204,156,0.08)] backdrop-blur-sm overflow-hidden"
-        onClick={startGame}
       >
         <GameState.Provider
           value={{
@@ -89,23 +62,29 @@ function Game() {
       </div>
 
       <div
-        className={`${gameOverClass} w-full mt-3 flex flex-col items-center gap-2 transition-opacity`}
+        className={`${gameOverClass} mt-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 transition-opacity`}
       >
+        <span className="flex min-w-0 items-center gap-2 text-sm">
+          <span
+            className={`${doto.className} flex size-6 shrink-0 items-center justify-center rounded-md border border-[#61cc9c]/30 bg-[#61cc9c]/10 text-sm font-semibold text-[#61cc9c]`}
+          >
+            X
+          </span>
+          <span className="opacity-80">You</span>
+          <b className="text-[#61cc9c]">{gameData.scores.X || "0"}</b>
+        </span>
+
         <span
-          className={`inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide transition-colors ${
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium tracking-wide transition-colors ${
             isPlayerTurn
               ? "bg-[#61cc9c]/10 text-[#61cc9c] border border-[#61cc9c]/30"
-              : gameData.gameOver
-                ? "bg-white/5 text-white/50 border border-white/10"
-                : "bg-white/5 text-white/70 border border-white/10"
+              : "bg-white/5 text-white/60 border border-white/10"
           }`}
         >
-          {gameData.gameOver ? (
-            <span className="size-1.5 rounded-full bg-white/40" />
-          ) : isPlayerTurn ? (
+          {isPlayerTurn ? (
             <span className="size-1.5 rounded-full bg-[#61cc9c]" />
           ) : (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-0.5">
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
@@ -115,31 +94,18 @@ function Game() {
               ))}
             </span>
           )}
-          {gameData.gameOver
-            ? "Game over"
-            : isPlayerTurn
-              ? "Your turn"
-              : "AI thinking"}
+          {isPlayerTurn ? "Your move" : "Thinking"}
         </span>
 
-        <div
-          className={`${montserrat_alternates.className} w-full max-w-[300px] flex justify-between text-sm`}
-        >
-          <span className="inline-flex items-center gap-2">
-            <span className="flex size-6 items-center justify-center rounded-md border border-[#61cc9c]/30 bg-[#61cc9c]/10 text-sm font-semibold text-[#61cc9c] ${doto.className}">
-              X
-            </span>
-            <span className="opacity-80">{gameData.playerName || "Guest"}</span>
-            <b className="text-[#61cc9c]">{gameData.scores.X || "0"}</b>
+        <span className="flex items-center justify-end gap-2 text-sm">
+          <b className="text-white/85">{gameData.scores.O || "0"}</b>
+          <span className="opacity-80">ca.io</span>
+          <span
+            className={`${doto.className} flex size-6 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-sm font-semibold text-white/80`}
+          >
+            O
           </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="opacity-80">ca.io</span>
-            <b className="text-[#61cc9c]">{gameData.scores.O || "0"}</b>
-            <span className="flex size-6 items-center justify-center rounded-md border border-white/15 bg-white/5 text-sm font-semibold text-white/80 ${doto.className}">
-              O
-            </span>
-          </span>
-        </div>
+        </span>
       </div>
     </>
   );
@@ -217,7 +183,7 @@ function Board() {
 
   const gameOverClass =
     gameData.gameOver &&
-    "opacity-100 pointer-events-auto transition-[2s] delay-[2000ms]";
+    "opacity-100 pointer-events-auto transition-opacity duration-300 delay-[600ms]";
 
   return (
     <div className="relative flex flex-col w-full h-full justify-center items-center">
@@ -234,10 +200,7 @@ function Board() {
             {gameData.winner == "X" ? (
               <>You won! 🎉</>
             ) : gameData.winner == "O" ? (
-              <>
-                AI{" "}
-                <b className="text-[#61cc9c]">{gameData.winner}</b> wins 🤖
-              </>
+              <>Hehe, I win</>
             ) : (
               <>
                 It&apos;s a <b className="text-[#61cc9c]">Tie!</b>
@@ -248,7 +211,7 @@ function Board() {
           <div className="mt-3 flex items-center justify-center gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-2 text-sm">
             <span className="inline-flex items-center gap-1.5">
               <b className="text-[#61cc9c]">{gameData.scores.X}</b>
-              <span className="opacity-75">{gameData.playerName}</span>
+              <span className="opacity-75">You</span>
             </span>
             <span className="font-bold text-white/25">vs</span>
             <span className="inline-flex items-center gap-1.5">

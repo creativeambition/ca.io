@@ -1,6 +1,7 @@
 import "@/styles/global.css";
 import { poppins } from "@/lib/fonts";
 import SmoothScroll from "@/components/SmoothScroll";
+import Splash, { splashSkipScript } from "@/components/Splash";
 
 export const metadata = {
   title: {
@@ -41,9 +42,14 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    // The inline script sets data-splash on <html> before hydration.
+    <html lang="en" suppressHydrationWarning>
       <SmoothScroll />
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <script dangerouslySetInnerHTML={{ __html: splashSkipScript }} />
+        <Splash />
+        {children}
+      </body>
     </html>
   );
 }

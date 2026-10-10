@@ -9,19 +9,19 @@ function ScrollIndicator() {
 
   useEffect(() => {
     let rafId = null;
+    // Measured only when the document resizes, so scrolling never forces layout.
+    let maxScroll = 0;
 
     const update = () => {
       rafId = null;
-      const scrollTop = window.scrollY;
-      const scrollHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const percentage = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      const fraction =
+        maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
 
       if (barRef.current) {
-        barRef.current.style.height = `${percentage}%`;
+        barRef.current.style.transform = `scaleY(${fraction})`;
       }
       if (labelRef.current) {
-        labelRef.current.textContent = `${Math.ceil(percentage)}%`;
+        labelRef.current.textContent = `${Math.ceil(fraction * 100)}%`;
       }
     };
 
@@ -31,10 +31,16 @@ function ScrollIndicator() {
       }
     };
 
-    update();
+    const resizeObserver = new ResizeObserver(() => {
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      onScroll();
+    });
+    resizeObserver.observe(document.body);
+
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
       if (rafId != null) {
         cancelAnimationFrame(rafId);
@@ -43,13 +49,14 @@ function ScrollIndicator() {
   }, [barRef, labelRef]);
 
   return (
-    <div className="hidden md:flex fixed right-8 top-[50%] translate-y-[-50%] w-1 h-[80vh] bg-[#61cc9c]/[0.04] before:absolute before:w-full before:aspect-[1/2] before:top-0 before:border before:border-b-0 after:absolute after:w-full after:aspect-[1/2] after:bottom-0 after:border after:border-t-0">
+    <div className="hidden md:flex fixed z-30 right-8 top-[50%] translate-y-[-50%] w-1 h-[80vh] bg-[#61cc9c]/[0.04] before:absolute before:w-full before:aspect-[1/2] before:top-0 before:border before:border-b-0 after:absolute after:w-full after:aspect-[1/2] after:bottom-0 after:border after:border-t-0">
       <div
         ref={barRef}
-        className="scroll-indicator absolute w-full h-[0%] top-0 rounded-full"
+        className="scroll-indicator absolute w-full h-full top-0 origin-top rounded-full"
         style={{
           backgroundImage: "linear-gradient(transparent, #61cc9c)",
-          transition: ".3s ease",
+          transform: "scaleY(0)",
+          transition: "transform .3s ease",
         }}
       ></div>
       <span
