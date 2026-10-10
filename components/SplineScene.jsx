@@ -11,11 +11,14 @@ const SplineComponent = dynamic(() => import("@splinetool/react-spline"), {
 });
 
 export default function SplineScene() {
-  const [inView, setInView] = useState(false);
+  const [near, setNear] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [interacted, setInteracted] = useState(false);
   const containerRef = useRef(null);
+  const appRef = useRef(null);
+  const visibleRef = useRef(false);
 
+  // Mount the scene once it is within half a screen of the viewport. It then
+  // stays mounted: remounting on the way back up costs a visible hitch.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -23,29 +26,35 @@ export default function SplineScene() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true);
+          setNear(true);
           observer.disconnect();
         }
       },
-      { rootMargin: "300px 0px" }
+      { rootMargin: "50% 0px" }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [containerRef]);
+  }, []);
 
-  // The Spline runtime is heavy and redraws every frame, so it loads on the
-  // visitor's first interaction rather than with the page (a "facade").
+  // While mounted, pause rendering whenever less than a quarter is on screen.
   useEffect(() => {
-    const events = ["pointerdown", "pointermove", "touchstart", "keydown", "wheel", "scroll"];
-    const start = () => {
-      setInteracted(true);
-      events.forEach((name) => window.removeEventListener(name, start));
-    };
-    events.forEach((name) =>
-      window.addEventListener(name, start, { once: true, passive: true })
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visibleRef.current = entry.intersectionRatio >= 0.25;
+        const app = appRef.current;
+        if (!app) return;
+        if (visibleRef.current) app.play();
+        else app.stop();
+      },
+      { threshold: [0, 0.25] }
     );
-    return () => events.forEach((name) => window.removeEventListener(name, start));
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -83,7 +92,7 @@ export default function SplineScene() {
         />
       </div>
 
-      {inView && interacted && (
+      {near && (
         <Suspense fallback={null}>
           <div
             className={`absolute left-0 top-0 w-[135%] h-full sm:w-[122%] sm:left-1/2 sm:-translate-x-1/2 transition-opacity duration-700 ${
@@ -92,7 +101,11 @@ export default function SplineScene() {
           >
             <SplineComponent
               scene="https://prod.spline.design/YTurGkXAz-yWLxOO/scene.splinecode"
-              onLoad={() => setLoaded(true)}
+              onLoad={(app) => {
+                appRef.current = app;
+                if (!visibleRef.current) app.stop();
+                setLoaded(true);
+              }}
             />
           </div>
         </Suspense>
