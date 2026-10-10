@@ -40,9 +40,9 @@ function About() {
           <span
             className={`text-base md:text-xl`}
           >
-            Full-Stack <code className="relative top-[0.5em] text-[#61cc9c]">Ctrl + C </code>
+            Full-Stack <code className="relative text-[#61cc9c]">Ctrl + C </code>
             De
-            <code className="relative top-[0.5em] text-[#61cc9c]"> V </code>eloper 😎
+            <code className="relative text-[#61cc9c]"> V </code>eloper 😎
           </span>
         </div>
       </div>

@@ -60,10 +60,10 @@ export default function SplineScene() {
   return (
     <div
       ref={containerRef}
-      className="absolute top-[100vh] -translate-y-[35%] w-full h-[100vh] overflow-hidden flex flex-col lg:z-20"
+      className="absolute top-[100vh] -translate-y-[35%] w-full h-[100vh] flex flex-col lg:z-20"
     >
       <div
-        className={`${sacramento.className} flex gap-4 relative left-8 md:left-12 lg:left-28 mt-8 z-10 pointer-events-none`}
+        className={`${sacramento.className} flex gap-4 relative left-8 md:left-12 lg:left-28 -mt-10 md:mt-0 z-10 pointer-events-none`}
       >
         <div className="flex flex-col gap-4">
           <h1 className={`text-4xl md:text-5xl`}>
