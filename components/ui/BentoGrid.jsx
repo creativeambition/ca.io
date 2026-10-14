@@ -6,8 +6,15 @@ import { FancyButtonAlt } from "./FancyButton";
 import { PiFilePdfFill } from "react-icons/pi";
 import { HiOutlineAcademicCap, HiOutlineLocationMarker } from "react-icons/hi";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { DynamicGame } from "@/lib/dynamic-imports";
+import dynamic from "next/dynamic";
 import DigitalScoreboard from "./DigitalScoreboard";
+
+// Split into its own chunk and rendered only in the browser: the game reads
+// localStorage when its state is created.
+const LazyGame = dynamic(() => import("@/components/Game"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[300px] animate-pulse bg-black/20" />,
+});
 
 const DESKTOP_QUERY = "(min-width: 768px)";
 
@@ -201,7 +208,7 @@ function BentoGrid() {
           </span>
         </div>
         <div className="relative flex w-full flex-1 flex-col items-center">
-          <DynamicGame />
+          <LazyGame />
         </div>
       </Card>
 
